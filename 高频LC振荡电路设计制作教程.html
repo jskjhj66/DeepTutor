@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高频 LC 振荡电路设计制作教程 · 西勒振荡器</title>
+<style>
+:root{
+  --bg:#f7f4ec;
+  --bg2:#fffdf8;
+  --ink:#1d2733;
+  --muted:#5f6c7b;
+  --rule:#d9d3c5;
+  --accent:#0b6e69;
+  --accent2:#b45309;
+  --serif:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",Georgia,serif;
+  --sans:"Noto Sans SC","Source Han Sans SC","PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.78;-webkit-font-smoothing:antialiased}
+.shell{max-width:1200px;margin:0 auto;padding:0 30px;display:grid;grid-template-columns:232px minmax(0,1fr);gap:46px;align-items:start}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;padding:38px 0 30px}
+.brand{font-family:var(--serif);font-size:13px;line-height:1.55;color:var(--muted);letter-spacing:.04em;margin-bottom:24px}
+.brand b{display:block;color:var(--ink);font-size:19px;letter-spacing:.02em;margin-bottom:3px}
+.toc-title{font-size:11px;letter-spacing:.2em;color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:8px}
+.toc a{display:flex;gap:10px;align-items:baseline;padding:7px 2px;color:var(--ink);text-decoration:none;font-size:13.5px;border-bottom:1px solid transparent}
+.toc a:hover{color:var(--accent);border-bottom-color:var(--rule)}
+.toc a span{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:20px}
+.side-card{margin-top:28px;padding:14px;background:var(--bg2);border:1px solid var(--rule);border-radius:8px;font-size:12.5px;line-height:1.68;color:var(--muted)}
+.side-card b{color:var(--accent2);display:block;margin-bottom:5px;font-size:11.5px;letter-spacing:.1em}
+main{min-width:0;padding:36px 0 90px}
+.cover{padding:22px 0 40px;border-bottom:2px solid var(--ink);margin-bottom:48px}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;color:var(--accent);margin-bottom:18px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(34px,4.5vw,52px);line-height:1.2;letter-spacing:.01em;margin:0 0 16px}
+.lede{font-size:16.5px;color:var(--muted);max-width:720px;margin:0 0 24px;line-height:1.75}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 20px}
+.meta{background:var(--bg2);border:1px solid var(--rule);border-radius:8px;padding:12px 14px}
+.meta .v{font-family:var(--serif);font-size:22px;color:var(--accent);line-height:1.25;letter-spacing:.01em}
+.meta .l{font-size:11.5px;color:var(--muted);margin-top:4px;letter-spacing:.04em}
+.fill{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--rule);padding-top:13px;letter-spacing:.05em}
+.fill em{font-style:normal;display:inline-block;min-width:96px;border-bottom:1px solid var(--rule);margin:0 6px 0 2px}
+section{margin-bottom:58px;scroll-margin-top:22px}
+h2{font-family:var(--serif);font-size:27px;line-height:1.35;margin:0 0 8px;display:flex;gap:12px;align-items:baseline}
+h2 .num{font-family:var(--mono);font-size:11.5px;color:var(--accent);letter-spacing:.12em;border:1px solid var(--accent);border-radius:4px;padding:2px 6px;flex:none;font-weight:400}
+h2+.sub{color:var(--muted);font-size:14px;margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+h3{font-size:18.5px;margin:30px 0 10px;padding-left:11px;border-left:3px solid var(--accent);line-height:1.45}
+h4{font-size:15px;margin:20px 0 6px;color:var(--accent2);letter-spacing:.02em}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 14px;padding-left:1.35em}
+li{margin-bottom:6px}
+strong{font-weight:700}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.88em;background:#ece6d8;color:#0a5b56;padding:1px 5px;border-radius:4px}
+.table-wrap{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--rule);border-radius:8px;background:var(--bg2)}
+table{width:100%;border-collapse:collapse;font-size:13.8px;line-height:1.65;min-width:520px}
+th{background:#efeade;color:var(--ink);text-align:left;font-weight:700;padding:10px 12px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid #e8e2d5;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbf7ee}
+tr.group td{background:#efeade;font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--accent);padding:7px 12px}
+td.mono,th.mono{font-family:var(--mono);font-size:12.6px;white-space:nowrap}
+figure{margin:20px 0 24px}
+.fig{background:var(--bg2);border:1px solid var(--rule);border-radius:10px;padding:14px}
+.fig svg{display:block;width:100%;height:auto}
+.figscroll{overflow-x:auto}
+.figscroll svg{display:block;width:100%;height:auto;min-width:1040px}
+figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.65;padding:0 2px}
+figcaption b{color:var(--ink)}
+.callout{margin:18px 0;padding:13px 16px;background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;font-size:14.3px;line-height:1.72}
+.callout .t{display:block;font-weight:700;color:var(--accent);margin-bottom:4px;font-size:12px;letter-spacing:.08em}
+.callout.warn{border-left-color:var(--accent2)}
+.callout.warn .t{color:var(--accent2)}
+.callout p:last-child{margin-bottom:0}
+.formula{font-family:var(--mono);font-size:13.6px;background:var(--bg2);border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 15px;margin:12px 0 16px;overflow-x:auto;white-space:nowrap;line-height:1.9}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.steps{counter-reset:step;list-style:none;padding:0;margin:14px 0}
+.steps>li{position:relative;padding:0 0 16px 42px;margin:0}
+.steps>li:before{counter-increment:step;content:counter(step);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--mono);font-size:11.5px;display:flex;align-items:center;justify-content:center}
+.steps>li:after{content:"";position:absolute;left:13px;top:29px;bottom:0;width:1px;background:var(--rule)}
+.steps>li:last-child:after{display:none}
+.steps b{display:block;margin-bottom:2px}
+sup a{color:var(--accent);text-decoration:none;font-size:.72em;font-weight:700}
+sup a:hover{text-decoration:underline}
+footer{margin-top:72px;padding-top:26px;border-top:2px solid var(--ink)}
+footer .sources h2{font-size:22px;margin-bottom:10px;display:block}
+footer .sources ol{padding-left:1.2rem;font-size:.85rem;color:var(--muted)}
+footer .sources li{margin-bottom:0.5rem;overflow-wrap:break-word;word-break:break-all}
+footer .sources .src-title{color:var(--ink);word-break:normal}
+footer .sources .src-url{display:block;margin-top:0.15rem;font-size:0.82rem;color:var(--accent);word-break:break-all}
+footer .colophon{margin-top:26px;font-size:12px;color:var(--muted);line-height:1.7;border-top:1px dashed var(--rule);padding-top:14px}
+@media(max-width:980px){
+  .shell{grid-template-columns:1fr;gap:0;padding:0 20px}
+  aside{position:static;height:auto;padding:24px 0 0;border-bottom:1px solid var(--rule)}
+  .toc{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+  .side-card{display:none}
+  main{padding-top:20px}
+  .meta-grid{grid-template-columns:1fr 1fr}
+  .cols{grid-template-columns:1fr}
+  .figscroll svg{min-width:900px}
+}
+@media(max-width:560px){
+  .toc{grid-template-columns:1fr}
+  .meta-grid{grid-template-columns:1fr 1fr}
+  .table-wrap table{font-size:13px}
+  h2{font-size:23px}
+}
+@media print{
+  aside{display:none}
+  .shell{display:block;max-width:none;padding:0}
+  main{padding:0}
+  body{background:#fff;font-size:10.8pt;line-height:1.65}
+  .cover{margin-bottom:28px}
+  .meta-grid{grid-template-columns:repeat(4,1fr)}
+  section{margin-bottom:30px}
+  figure,.table-wrap,.callout,.formula{break-inside:avoid;page-break-inside:avoid}
+  h2,h3{break-after:avoid}
+  a{color:var(--ink)}
+  .figscroll{overflow:visible}
+  .figscroll svg{min-width:0}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<aside>
+  <div class="brand"><b>高频 LC 振荡器</b>设计制作教程<br>通信专业课程设计 · 第一周</div>
+  <div class="toc-title">目录</div>
+  <nav class="toc">
+    <a href="#s1"><span>01</span>任务解读与方案选型</a>
+    <a href="#s2"><span>02</span>系统框图与整机原理图</a>
+    <a href="#s3"><span>03</span>电路设计与计算</a>
+    <a href="#s4"><span>04</span>元器件清单与工具</a>
+    <a href="#s5"><span>05</span>实物制作</a>
+    <a href="#s6"><span>06</span>调试与性能测试</a>
+    <a href="#s7"><span>07</span>验收自检与稳定性</a>
+    <a href="#s8"><span>08</span>课程设计报告提纲</a>
+    <a href="#s9"><span>09</span>参考资料</a>
+  </nav>
+  <div class="side-card">
+    <b>关键指标</b>
+    12 V 单电源<br>
+    1–2 MHz 连续可调<br>
+    Vpp &gt; 4 V（1 kΩ 负载）<br>
+    西勒振荡 + 射极跟随缓冲
+  </div>
+</aside>
+
+<main>
+
+<header class="cover">
+  <div class="kicker">COMMUNICATION ENGINEERING · COURSE DESIGN · WEEK 01</div>
+  <h1>高频 LC 振荡电路<br>设计制作教程</h1>
+  <p class="lede">从原理图到实物验收的一站式教程：采用共基极西勒振荡器与射极跟随器缓冲，单电源 12 V 供电，输出 1–2 MHz 连续可调、Vpp 大于 4 V 的正弦波。</p>
+  <div class="meta-grid">
+    <div class="meta"><div class="v">12 V</div><div class="l">单电源供电</div></div>
+    <div class="meta"><div class="v">1–2 MHz</div><div class="l">连续可调</div></div>
+    <div class="meta"><div class="v">&gt; 4 V<sub>pp</sub></div><div class="l">1 kΩ 负载</div></div>
+    <div class="meta"><div class="v">西勒 + 射随</div><div class="l">拓扑方案</div></div>
+  </div>
+  <div class="fill">组别 <em></em> 小组成员 <em></em> 指导教师 <em></em> 日期 <em></em></div>
+</header>
+
+<section id="s1">
+  <h2><span class="num">01</span>任务解读与方案选型</h2>
+  <p class="sub">先明确任务书要求，再在考毕兹、克拉波、西勒三种电容三点式电路中做出选择。</p>
+
+  <p>任务书要求设计并制作一台高频 LC 正弦波振荡器，完成原理图设计、实物焊接、调试与性能测试，并提交包含九项内容的课程设计报告。核心指标可以归纳为下表。<sup><a href="#cite-1">[1]</a></sup></p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>项目</th><th>任务书要求</th><th>本方案目标</th></tr></thead>
+      <tbody>
+        <tr><td>供电</td><td>单电源 +12 V</td><td>12 V 单电源，板载反接保护与去耦</td></tr>
+        <tr><td>拓扑</td><td>考毕兹 / 克拉波 / 西勒任选</td><td>共基极西勒振荡器（Q1）+ 射极跟随器（Q2）</td></tr>
+        <tr><td>频率</td><td>1–2 MHz 连续可调</td><td>设计覆盖约 0.89–2.22 MHz，标定 1.00–2.00 MHz</td></tr>
+        <tr><td>幅度</td><td>Vpp &gt; 4 V（1 kΩ 负载）</td><td>样机典型 5.6–6.0 Vpp，设计估算 4.6–6.9 Vpp</td></tr>
+        <tr><td>波形</td><td>无明显失真</td><td>正弦对称，无削顶；失真以示波器观察判定</td></tr>
+        <tr><td>交付</td><td>实物 + 报告（九项）+ 个人总结</td><td>本教程给出全部参数、工序、记录表与报告提纲</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.1 三种电容三点式电路怎么选</h3>
+  <p>三种拓扑都属于电容三点式：由 C1、C2 构成正反馈分压，把输出端的一部分电压送回输入端。区别在于回路中串联电容 C3 的位置和调谐电容的接法。<sup><a href="#cite-2">[2]</a></sup><sup><a href="#cite-4">[4]</a></sup><sup><a href="#cite-5">[5]</a></sup></p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>拓扑</th><th>回路结构</th><th>反馈系数</th><th>调谐范围</th><th>幅度稳定性</th><th>结论</th></tr></thead>
+      <tbody>
+        <tr><td><strong>考毕兹</strong></td><td>C1、C2 分压直接跨接 L，调谐电容与 L 并联</td><td class="mono">n = C1/(C1+C2)</td><td>较宽</td><td>调谐时 n 随之变化，幅度波动明显</td><td>适合固定频率</td></tr>
+        <tr><td><strong>克拉波</strong></td><td>在 L 支路串联小电容 C3，调谐靠改变 C3</td><td class="mono">n 基本不变</td><td>窄（C3 越小越稳、范围越窄）</td><td>很好</td><td>适合窄带高稳定</td></tr>
+        <tr><td><strong>西勒</strong></td><td>C3 串 L 固定，调谐电容 C4 并在 L 两端</td><td class="mono">n 基本不变</td><td>宽</td><td>较好</td><td><strong>本方案首选</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>本方案选择<strong>西勒</strong>，理由有四条：</p>
+  <ul>
+    <li><strong>反馈比稳定。</strong>C1、C2 固定，调谐电容 C4 并在 L1 两端，转动 C4 时反馈系数 n 基本不变，整个频段的幅度更容易做得平稳。</li>
+    <li><strong>回路与晶体管弱耦合。</strong>C3 把 Q1 的极间电容与谐振回路隔开，频率受器件参数和温度的影响更小。</li>
+    <li><strong>调谐范围够用。</strong>5–250 pF 的主调电容配合 100 µH 电感，可以覆盖 1–2 MHz 且两端都留有余量。</li>
+    <li><strong>共基极适合高频。</strong>共基组态输入输出隔离好、功率增益可用；再加一级射极跟随器，带 1 kΩ 负载也不掉幅。</li>
+  </ul>
+
+  <div class="callout warn">
+    <span class="t">代价与对策</span>
+    <p>西勒电路的起振增益要求比考毕兹略高。本方案把 Q1 的静态电流取到 3.5–3.8 mA（gm 约 134–146 mS），并在调试环节用 Re 微调。若实物不起振，优先检查 C1/C2/C3 的焊接与 L1 是否开路，再把 Re 从 560 Ω 换到 470 Ω。</p>
+  </div>
+</section>
+
+<section id="s2">
+  <h2><span class="num">02</span>系统框图与整机原理图</h2>
+  <p class="sub">整机分为电源、振荡、缓冲、输出四个功能块，另设四个测试点。</p>
+
+  <h3>2.1 系统框图</h3>
+  <figure class="fig">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300">
+<rect x="0" y="0" width="1200" height="300" fill="#ffffff"/>
+<rect x="40" y="95" width="190" height="110" rx="10" fill="#f3f7f7" stroke="#0b6e69" stroke-width="1.8"/>
+<text x="135.0" y="129" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="bold" fill="#1f2933" text-anchor="middle">12V 电源</text>
+<text x="135.0" y="153" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">D1 反接保护</text>
+<text x="135.0" y="172" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">C9/C8 去耦</text>
+<text x="135.0" y="191" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">LED 指示</text>
+<rect x="300" y="95" width="300" height="110" rx="10" fill="#f3f7f7" stroke="#0b6e69" stroke-width="1.8"/>
+<text x="450.0" y="129" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="bold" fill="#1f2933" text-anchor="middle">西勒振荡器（Q1）</text>
+<text x="450.0" y="153" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">共基放大 + 电容三点式</text>
+<text x="450.0" y="172" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">C4 主调 / C5 微调</text>
+<text x="450.0" y="191" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">f = 1–2 MHz</text>
+<rect x="670" y="95" width="230" height="110" rx="10" fill="#f3f7f7" stroke="#0b6e69" stroke-width="1.8"/>
+<text x="785.0" y="129" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="bold" fill="#1f2933" text-anchor="middle">射极跟随器（Q2）</text>
+<text x="785.0" y="153" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">提高带载能力</text>
+<text x="785.0" y="172" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">输出阻抗低</text>
+<text x="785.0" y="191" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">Vpp ≈ 6 V</text>
+<rect x="970" y="95" width="190" height="110" rx="10" fill="#f3f7f7" stroke="#0b6e69" stroke-width="1.8"/>
+<text x="1065.0" y="129" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="bold" fill="#1f2933" text-anchor="middle">输出</text>
+<text x="1065.0" y="153" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">C7 隔直</text>
+<text x="1065.0" y="172" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">1 kΩ 负载</text>
+<text x="1065.0" y="191" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">BNC / 排针</text>
+<line x1="230" y1="150" x2="300" y2="150" stroke="#1f2933" stroke-width="2.4"/>
+<polygon points="300,150 288.9,154.7 288.9,145.3" fill="#1f2933"/>
+<line x1="600" y1="150" x2="670" y2="150" stroke="#1f2933" stroke-width="2.4"/>
+<polygon points="670,150 658.9,154.7 658.9,145.3" fill="#1f2933"/>
+<line x1="900" y1="150" x2="970" y2="150" stroke="#1f2933" stroke-width="2.4"/>
+<polygon points="970,150 958.9,154.7 958.9,145.3" fill="#1f2933"/>
+<path d="M450,205 C450,255 850,255 790,205" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4"/>
+<polygon points="790,205 796,217 784,214" fill="#b45309"/>
+<text x="620" y="274" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#b45309" text-anchor="middle">正反馈：C1/C2 电容分压，环路增益 &gt; 1</text>
+<text x="450" y="75" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#0b6e69" text-anchor="middle">L1 = 100 µH，CΣ = C4 + C5 + Cstray + 1/(1/C1+1/C2+1/C3)</text>
+</svg>
+    <figcaption><b>图 2-1</b>　整机框图。电源经反接保护与去耦后供给振荡级和缓冲级；Q1 产生 1–2 MHz 正弦波，Q2 缓冲后经 C7 隔直输出。</figcaption>
+  </figure>
+
+  <p>各模块职责：</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>模块</th><th>核心器件</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr><td>电源与保护</td><td>J1、D1、R6、LED、C9、C8</td><td>12 V 输入、防反接、电源指示、储能与高频去耦</td></tr>
+        <tr><td>振荡级</td><td>Q1、R1、R2、Re、Cb、L1、C1、C2、C3、C4、C5、L2、R8</td><td>共基放大 + 电容分压正反馈，产生 1–2 MHz 正弦波</td></tr>
+        <tr><td>缓冲级</td><td>Q2、R3、R4、R5、C6、R7</td><td>射极跟随，提高带载能力，隔离负载对回路的影响</td></tr>
+        <tr><td>输出</td><td>C7、RL、J2</td><td>隔直、1 kΩ 测试负载、BNC 输出</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.2 整机原理图</h3>
+  <figure class="fig">
+    <div class="figscroll"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 850">
+<rect x="0" y="0" width="1500" height="850" fill="#fbfaf6"/>
+<line x1="0" y1="0" x2="0" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="50" y1="0" x2="50" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="100" y1="0" x2="100" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="150" y1="0" x2="150" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="200" y1="0" x2="200" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="250" y1="0" x2="250" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="300" y1="0" x2="300" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="350" y1="0" x2="350" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="400" y1="0" x2="400" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="450" y1="0" x2="450" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="500" y1="0" x2="500" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="550" y1="0" x2="550" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="600" y1="0" x2="600" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="650" y1="0" x2="650" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="700" y1="0" x2="700" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="750" y1="0" x2="750" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="800" y1="0" x2="800" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="850" y1="0" x2="850" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="900" y1="0" x2="900" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="950" y1="0" x2="950" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1000" y1="0" x2="1000" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1050" y1="0" x2="1050" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1100" y1="0" x2="1100" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1150" y1="0" x2="1150" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1200" y1="0" x2="1200" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1250" y1="0" x2="1250" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1300" y1="0" x2="1300" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1350" y1="0" x2="1350" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1400" y1="0" x2="1400" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="1450" y1="0" x2="1450" y2="850" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="0" x2="1500" y2="0" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="50" x2="1500" y2="50" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="100" x2="1500" y2="100" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="150" x2="1500" y2="150" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="200" x2="1500" y2="200" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="250" x2="1500" y2="250" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="300" x2="1500" y2="300" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="350" x2="1500" y2="350" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="400" x2="1500" y2="400" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="450" x2="1500" y2="450" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="500" x2="1500" y2="500" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="550" x2="1500" y2="550" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="600" x2="1500" y2="600" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="650" x2="1500" y2="650" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="700" x2="1500" y2="700" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="750" x2="1500" y2="750" stroke="#e9e4d8" stroke-width="0.6"/>
+<line x1="0" y1="800" x2="1500" y2="800" stroke="#e9e4d8" stroke-width="0.6"/>
+<rect x="390" y="112" width="620" height="558" rx="0" fill="none" stroke="#b8c2cc" stroke-width="1.4" stroke-dasharray="7 5"/>
+<text x="405" y="134" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" font-weight="bold" fill="#6b7785" text-anchor="start">西勒振荡器（共基极）</text>
+<rect x="1025" y="135" width="310" height="535" rx="0" fill="none" stroke="#b8c2cc" stroke-width="1.4" stroke-dasharray="7 5"/>
+<text x="1040" y="160" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" font-weight="bold" fill="#6b7785" text-anchor="start">射极跟随缓冲</text>
+<rect x="55" y="60" width="315" height="390" rx="0" fill="none" stroke="#b8c2cc" stroke-width="1.4" stroke-dasharray="7 5"/>
+<line x1="110" y1="100" x2="1380" y2="100" stroke="#1f2933" stroke-width="2.2"/>
+<text x="760" y="84" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="bold" fill="#0b5f73" text-anchor="middle">VCC  +12V</text>
+<text x="78" y="138" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">J1</text>
+<text x="78" y="156" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">12V IN</text>
+<line x1="80" y1="100" x2="110" y2="100" stroke="#1f2933" stroke-width="2"/>
+<polygon points="110,87 110,113 128,100" fill="#1f2933"/>
+<line x1="128" y1="87" x2="128" y2="113" stroke="#1f2933" stroke-width="2.4"/>
+<text x="119" y="76" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="middle">D1</text>
+<text x="119" y="58" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="middle">1N4007</text>
+<line x1="128" y1="100" x2="180" y2="100" stroke="#1f2933" stroke-width="2"/>
+<circle cx="180" cy="100" r="4" fill="#1f2933"/>
+<line x1="230" y1="100" x2="230" y2="150" stroke="#1f2933" stroke-width="2"/>
+<polyline points="230,150 237,155.0 223,165.0 237,175.0 223,185.0 237,195.0 223,205.0 230,210" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="244" y="176.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">R6</text>
+<text x="244" y="196.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">1kΩ</text>
+<line x1="230" y1="210" x2="230" y2="240" stroke="#1f2933" stroke-width="2"/>
+<polygon points="217,240 243,240 230,258" fill="#1f2933"/>
+<line x1="217" y1="258" x2="243" y2="258" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="246" y1="244" x2="256" y2="254" stroke="#1f2933" stroke-width="1.6"/>
+<line x1="251" y1="241" x2="261" y2="251" stroke="#1f2933" stroke-width="1.6"/>
+<text x="206" y="250" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">LED</text>
+<text x="206" y="268" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">红 3mm</text>
+<line x1="230" y1="276" x2="230" y2="300" stroke="#1f2933" stroke-width="2"/>
+<line x1="230" y1="300" x2="230" y2="309" stroke="#1f2933" stroke-width="2"/>
+<line x1="215" y1="309" x2="245" y2="309" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="220" y1="315" x2="240" y2="315" stroke="#1f2933" stroke-width="2"/>
+<line x1="225" y1="321" x2="235" y2="321" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="310" y1="100" x2="310" y2="250" stroke="#1f2933" stroke-width="2"/>
+<line x1="290.0" y1="250" x2="330.0" y2="250" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="290.0" y1="272" x2="330.0" y2="272" stroke="#1f2933" stroke-width="2.4"/>
+<text x="286.0" y="245" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1f2933" text-anchor="end">+</text>
+<text x="340.0" y="259.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">C9</text>
+<text x="340.0" y="277.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">100µF/25V</text>
+<line x1="310" y1="272" x2="310" y2="380" stroke="#1f2933" stroke-width="2"/>
+<line x1="310" y1="380" x2="310" y2="389" stroke="#1f2933" stroke-width="2"/>
+<line x1="295" y1="389" x2="325" y2="389" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="300" y1="395" x2="320" y2="395" stroke="#1f2933" stroke-width="2"/>
+<line x1="305" y1="401" x2="315" y2="401" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="360" y1="100" x2="360" y2="180" stroke="#1f2933" stroke-width="2"/>
+<line x1="343.0" y1="180" x2="377.0" y2="180" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="343.0" y1="198" x2="377.0" y2="198" stroke="#1f2933" stroke-width="2.4"/>
+<text x="387.0" y="187.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">C8</text>
+<text x="387.0" y="205.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">0.1µF</text>
+<line x1="360" y1="198" x2="360" y2="300" stroke="#1f2933" stroke-width="2"/>
+<line x1="360" y1="300" x2="360" y2="309" stroke="#1f2933" stroke-width="2"/>
+<line x1="345" y1="309" x2="375" y2="309" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="350" y1="315" x2="370" y2="315" stroke="#1f2933" stroke-width="2"/>
+<line x1="355" y1="321" x2="365" y2="321" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="470" y1="100" x2="470" y2="200" stroke="#1f2933" stroke-width="2"/>
+<polyline points="470,200 477,206.66666666666666 463,220.0 477,233.33333333333334 463,246.66666666666669 477,260.0 463,273.33333333333337 470,280" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="456" y="236.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">R1</text>
+<text x="456" y="256.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">22kΩ</text>
+<line x1="470" y1="280" x2="470" y2="420" stroke="#1f2933" stroke-width="2"/>
+<circle cx="470" cy="420" r="4" fill="#1f2933"/>
+<polyline points="470,480 477,486.6666666666667 463,500.0 477,513.3333333333334 463,526.6666666666666 477,540.0 463,553.3333333333334 470,560" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="484" y="516.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">R2</text>
+<text x="484" y="536.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">6.8kΩ</text>
+<line x1="470" y1="560" x2="470" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="470" y1="620" x2="470" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="455" y1="629" x2="485" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="460" y1="635" x2="480" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="465" y1="641" x2="475" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="470" y1="420" x2="410" y2="420" stroke="#1f2933" stroke-width="2"/>
+<circle cx="470" cy="420" r="4" fill="#1f2933"/>
+<line x1="393.0" y1="500" x2="427.0" y2="500" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="393.0" y1="518" x2="427.0" y2="518" stroke="#1f2933" stroke-width="2.4"/>
+<text x="430" y="478" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">Cb</text>
+<text x="430" y="496" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">0.1µF</text>
+<line x1="410" y1="420" x2="410" y2="500" stroke="#1f2933" stroke-width="2"/>
+<line x1="410" y1="518" x2="410" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="410" y1="620" x2="410" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="395" y1="629" x2="425" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="400" y1="635" x2="420" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="405" y1="641" x2="415" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="470" y1="420" x2="560" y2="420" stroke="#1f2933" stroke-width="2"/>
+<circle cx="520" cy="420" r="4" fill="#1f2933"/>
+<line x1="520" y1="420" x2="560" y2="420" stroke="#1f2933" stroke-width="2"/>
+<line x1="560" y1="385" x2="560" y2="455" stroke="#1f2933" stroke-width="3"/>
+<line x1="560" y1="408" x2="610" y2="350" stroke="#1f2933" stroke-width="2"/>
+<line x1="560" y1="432" x2="610" y2="490" stroke="#1f2933" stroke-width="2"/>
+<polygon points="610,490 598.9261440097019,486.343538116411 608.0150635489089,478.50826265157747" fill="#1f2933"/>
+<text x="542" y="366" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">Q1</text>
+<text x="542" y="384" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">2SC9018</text>
+<circle cx="610" cy="350" r="4" fill="#1f2933"/>
+<circle cx="610" cy="490" r="4" fill="#1f2933"/>
+<line x1="610" y1="350" x2="610" y2="270" stroke="#1f2933" stroke-width="2"/>
+<path d="M 610 170 A 12 12.5 0 0 1 610 195.0 A 12 12.5 0 0 1 610 220.0 A 12 12.5 0 0 1 610 245.0 A 12 12.5 0 0 1 610 270.0 " fill="none" stroke="#1f2933" stroke-width="2"/>
+<text x="588" y="216.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">L2</text>
+<text x="588" y="236.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">1mH RFC</text>
+<line x1="610" y1="160" x2="610" y2="170" stroke="#1f2933" stroke-width="2"/>
+<polyline points="610,120 617,123.33333333333333 603,130.0 617,136.66666666666666 603,143.33333333333334 617,150.0 603,156.66666666666669 610,160" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="624" y="136.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">R8</text>
+<text x="624" y="156.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">1kΩ</text>
+<line x1="610" y1="100" x2="610" y2="120" stroke="#1f2933" stroke-width="2"/>
+<circle cx="610" cy="100" r="4" fill="#1f2933"/>
+<line x1="610" y1="350" x2="680" y2="350" stroke="#1f2933" stroke-width="2"/>
+<circle cx="680" cy="350" r="4" fill="#1f2933"/>
+<line x1="680" y1="350" x2="680" y2="405" stroke="#1f2933" stroke-width="2"/>
+<line x1="663.0" y1="405" x2="697.0" y2="405" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="663.0" y1="423" x2="697.0" y2="423" stroke="#1f2933" stroke-width="2.4"/>
+<text x="707.0" y="412.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">C1</text>
+<text x="707.0" y="430.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">220pF NP0</text>
+<line x1="680" y1="423" x2="680" y2="490" stroke="#1f2933" stroke-width="2"/>
+<line x1="680" y1="490" x2="610" y2="490" stroke="#1f2933" stroke-width="2"/>
+<line x1="680" y1="350" x2="740" y2="350" stroke="#1f2933" stroke-width="2"/>
+<line x1="740" y1="333.0" x2="740" y2="367.0" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="758" y1="333.0" x2="758" y2="367.0" stroke="#1f2933" stroke-width="2.4"/>
+<text x="749.0" y="323.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="middle">C3</text>
+<text x="749.0" y="305.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="middle">39pF NP0</text>
+<line x1="758" y1="350" x2="820" y2="350" stroke="#1f2933" stroke-width="2"/>
+<circle cx="820" cy="350" r="4" fill="#1f2933"/>
+<line x1="610" y1="490" x2="540" y2="490" stroke="#1f2933" stroke-width="2"/>
+<circle cx="610" cy="490" r="4" fill="#1f2933"/>
+<line x1="540" y1="490" x2="540" y2="530" stroke="#1f2933" stroke-width="2"/>
+<polyline points="540,530 547,536.6666666666666 533,550.0 547,563.3333333333334 533,576.6666666666666 547,590.0 533,603.3333333333334 540,610" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="526" y="566.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">Re</text>
+<text x="526" y="586.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">560Ω</text>
+<line x1="540" y1="610" x2="540" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="540" y1="620" x2="540" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="525" y1="629" x2="555" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="530" y1="635" x2="550" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="535" y1="641" x2="545" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="610" y1="490" x2="610" y2="540" stroke="#1f2933" stroke-width="2"/>
+<line x1="593.0" y1="540" x2="627.0" y2="540" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="593.0" y1="558" x2="627.0" y2="558" stroke="#1f2933" stroke-width="2.4"/>
+<text x="637.0" y="547.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">C2</text>
+<text x="637.0" y="565.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">680pF NP0</text>
+<line x1="610" y1="558" x2="610" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="610" y1="620" x2="610" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="595" y1="629" x2="625" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="600" y1="635" x2="620" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="605" y1="641" x2="615" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="820" y1="350" x2="820" y2="400" stroke="#1f2933" stroke-width="2"/>
+<path d="M 820 400 A 13 12.5 0 0 1 820 425.0 A 13 12.5 0 0 1 820 450.0 A 13 12.5 0 0 1 820 475.0 A 13 12.5 0 0 1 820 500.0 " fill="none" stroke="#1f2933" stroke-width="2"/>
+<text x="842" y="446.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">L1</text>
+<text x="842" y="466.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">100µH</text>
+<line x1="820" y1="500" x2="820" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="820" y1="620" x2="820" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="805" y1="629" x2="835" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="810" y1="635" x2="830" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="815" y1="641" x2="825" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="820" y1="350" x2="900" y2="350" stroke="#1f2933" stroke-width="2"/>
+<circle cx="900" cy="350" r="4" fill="#1f2933"/>
+<line x1="900" y1="350" x2="900" y2="420" stroke="#1f2933" stroke-width="2"/>
+<line x1="882.0" y1="420" x2="918.0" y2="420" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="882.0" y1="438" x2="918.0" y2="438" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="880.0" y1="441" x2="920.0" y2="417" stroke="#1f2933" stroke-width="1.8"/>
+<polygon points="920.0,417 912.0,419 918.0,426" fill="#1f2933"/>
+<text x="860" y="376" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">C4  5–250pF</text>
+<text x="860" y="394" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">可变电容</text>
+<line x1="900" y1="438" x2="900" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="900" y1="620" x2="900" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="885" y1="629" x2="915" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="890" y1="635" x2="910" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="895" y1="641" x2="905" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="900" y1="350" x2="980" y2="350" stroke="#1f2933" stroke-width="2"/>
+<circle cx="980" cy="350" r="4" fill="#1f2933"/>
+<line x1="980" y1="350" x2="980" y2="420" stroke="#1f2933" stroke-width="2"/>
+<line x1="962.0" y1="420" x2="998.0" y2="420" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="962.0" y1="438" x2="998.0" y2="438" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="960.0" y1="441" x2="1000.0" y2="417" stroke="#1f2933" stroke-width="1.8"/>
+<polygon points="1000.0,417 992.0,419 998.0,426" fill="#1f2933"/>
+<text x="1000" y="372" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">C5  5–30pF</text>
+<text x="1000" y="390" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">微调</text>
+<line x1="980" y1="438" x2="980" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="980" y1="620" x2="980" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="965" y1="629" x2="995" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="970" y1="635" x2="990" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="975" y1="641" x2="985" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="820" y1="350" x2="820" y2="330" stroke="#1f2933" stroke-width="2"/>
+<circle cx="610" cy="330" r="5" fill="none" stroke="#0b5f73" stroke-width="1.6"/>
+<text x="630" y="322" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0b5f73" text-anchor="start">TP1</text>
+<circle cx="820" cy="330" r="5" fill="none" stroke="#0b5f73" stroke-width="1.6"/>
+<text x="802" y="322" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0b5f73" text-anchor="end">TP2</text>
+<circle cx="610" cy="515" r="5" fill="none" stroke="#0b5f73" stroke-width="1.6"/>
+<text x="594" y="513" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0b5f73" text-anchor="end">TP4</text>
+<line x1="680" y1="350" x2="680" y2="240" stroke="#1f2933" stroke-width="2"/>
+<line x1="680" y1="240" x2="940" y2="240" stroke="#1f2933" stroke-width="2"/>
+<line x1="940" y1="223.0" x2="940" y2="257.0" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="958" y1="223.0" x2="958" y2="257.0" stroke="#1f2933" stroke-width="2.4"/>
+<text x="949.0" y="213.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="middle">C6</text>
+<text x="949.0" y="195.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="middle">150pF</text>
+<line x1="958" y1="240" x2="1050" y2="240" stroke="#1f2933" stroke-width="2"/>
+<polyline points="1050,240 1053.3333333333333,233 1060.0,247 1066.6666666666667,233 1073.3333333333333,247 1080.0,233 1086.6666666666667,247 1090,240" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="1070.0" y="222" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="middle">R7</text>
+<text x="1070.0" y="204" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="middle">1kΩ</text>
+<line x1="1090" y1="240" x2="1100" y2="240" stroke="#1f2933" stroke-width="2"/>
+<line x1="1100" y1="240" x2="1100" y2="430" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1100" cy="430" r="4" fill="#1f2933"/>
+<line x1="1150" y1="100" x2="1150" y2="430" stroke="#1f2933" stroke-width="2"/>
+<polyline points="1150,200 1157,206.66666666666666 1143,220.0 1157,233.33333333333334 1143,246.66666666666669 1157,260.0 1143,273.33333333333337 1150,280" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="1164" y="236.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">R3</text>
+<text x="1164" y="256.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">22kΩ</text>
+<line x1="1150" y1="430" x2="1100" y2="430" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1150" cy="430" r="4" fill="#1f2933"/>
+<line x1="1100" y1="430" x2="1050" y2="430" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1050" cy="430" r="4" fill="#1f2933"/>
+<line x1="1050" y1="430" x2="1050" y2="480" stroke="#1f2933" stroke-width="2"/>
+<polyline points="1050,480 1057,486.6666666666667 1043,500.0 1057,513.3333333333334 1043,526.6666666666666 1057,540.0 1043,553.3333333333334 1050,560" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="1064" y="516.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">R4</text>
+<text x="1064" y="536.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">22kΩ</text>
+<line x1="1050" y1="560" x2="1050" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="1050" y1="620" x2="1050" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="1035" y1="629" x2="1065" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="1040" y1="635" x2="1060" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="1045" y1="641" x2="1055" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="1100" y1="430" x2="1140" y2="430" stroke="#1f2933" stroke-width="2"/>
+<line x1="1140" y1="395" x2="1140" y2="465" stroke="#1f2933" stroke-width="3"/>
+<line x1="1140" y1="418" x2="1190" y2="360" stroke="#1f2933" stroke-width="2"/>
+<line x1="1140" y1="442" x2="1190" y2="500" stroke="#1f2933" stroke-width="2"/>
+<polygon points="1190,500 1178.9261440097018,496.343538116411 1188.0150635489088,488.50826265157747" fill="#1f2933"/>
+<text x="1082" y="338" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="end">Q2</text>
+<text x="1082" y="356" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="end">2SC9018</text>
+<circle cx="1190" cy="360" r="4" fill="#1f2933"/>
+<circle cx="1190" cy="500" r="4" fill="#1f2933"/>
+<line x1="1190" y1="360" x2="1190" y2="100" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1190" cy="100" r="4" fill="#1f2933"/>
+<line x1="1190" y1="500" x2="1190" y2="530" stroke="#1f2933" stroke-width="2"/>
+<polyline points="1190,530 1197,536.6666666666666 1183,550.0 1197,563.3333333333334 1183,576.6666666666666 1197,590.0 1183,603.3333333333334 1190,610" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="1204" y="566.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">R5</text>
+<text x="1204" y="586.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">680Ω</text>
+<line x1="1190" y1="610" x2="1190" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="1190" y1="620" x2="1190" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="1175" y1="629" x2="1205" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="1180" y1="635" x2="1200" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="1185" y1="641" x2="1195" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="1190" y1="500" x2="1260" y2="500" stroke="#1f2933" stroke-width="2"/>
+<line x1="1260" y1="481.0" x2="1260" y2="519.0" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="1280" y1="481.0" x2="1280" y2="519.0" stroke="#1f2933" stroke-width="2.4"/>
+<text x="1252" y="477.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1f2933" text-anchor="end">+</text>
+<text x="1270.0" y="539.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="middle">C7</text>
+<text x="1270.0" y="557.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="middle">10µF/25V</text>
+<line x1="1280" y1="500" x2="1360" y2="500" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1360" cy="500" r="4" fill="#1f2933"/>
+<line x1="1360" y1="500" x2="1360" y2="530" stroke="#1f2933" stroke-width="2"/>
+<polyline points="1360,530 1367,536.6666666666666 1353,550.0 1367,563.3333333333334 1353,576.6666666666666 1367,590.0 1353,603.3333333333334 1360,610" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<text x="1374" y="566.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">RL</text>
+<text x="1374" y="586.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">1kΩ</text>
+<line x1="1360" y1="610" x2="1360" y2="620" stroke="#1f2933" stroke-width="2"/>
+<line x1="1360" y1="620" x2="1360" y2="629" stroke="#1f2933" stroke-width="2"/>
+<line x1="1345" y1="629" x2="1375" y2="629" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="1350" y1="635" x2="1370" y2="635" stroke="#1f2933" stroke-width="2"/>
+<line x1="1355" y1="641" x2="1365" y2="641" stroke="#1f2933" stroke-width="1.8"/>
+<line x1="1360" y1="500" x2="1386" y2="500" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1400" cy="500" r="14" fill="none" stroke="#1f2933" stroke-width="2"/>
+<circle cx="1400" cy="500" r="4" fill="#1f2933"/>
+<line x1="1414" y1="500" x2="1422" y2="500" stroke="#1f2933" stroke-width="2"/>
+<text x="1400" y="470" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="middle">J2  OUT</text>
+<line x1="1250" y1="100" x2="1250" y2="180" stroke="#1f2933" stroke-width="2"/>
+<line x1="1233.0" y1="180" x2="1267.0" y2="180" stroke="#1f2933" stroke-width="2.4"/>
+<line x1="1233.0" y1="198" x2="1267.0" y2="198" stroke="#1f2933" stroke-width="2.4"/>
+<text x="1277.0" y="187.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b5f73" text-anchor="start">C11</text>
+<text x="1277.0" y="205.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="normal" fill="#0b6e69" text-anchor="start">0.1µF</text>
+<line x1="1250" y1="198" x2="1250" y2="300" stroke="#1f2933" stroke-width="2"/>
+<line x1="1250" y1="300" x2="1250" y2="309" stroke="#1f2933" stroke-width="2"/>
+<line x1="1235" y1="309" x2="1265" y2="309" stroke="#1f2933" stroke-width="2.2"/>
+<line x1="1240" y1="315" x2="1260" y2="315" stroke="#1f2933" stroke-width="2"/>
+<line x1="1245" y1="321" x2="1255" y2="321" stroke="#1f2933" stroke-width="1.8"/>
+<circle cx="1320" cy="500" r="5" fill="none" stroke="#0b5f73" stroke-width="1.6"/>
+<text x="1320" y="524" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0b5f73" text-anchor="middle">TP3</text>
+<rect x="1100" y="700" width="350" height="115" rx="0" fill="none" stroke="#9aa5b1" stroke-width="1.2" stroke-dasharray="none"/>
+<line x1="1100" y1="740" x2="1450" y2="740" stroke="#9aa5b1" stroke-width="1"/>
+<line x1="1100" y1="780" x2="1450" y2="780" stroke="#9aa5b1" stroke-width="1"/>
+<text x="1115" y="725" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1f2933" text-anchor="start">高频 LC 正弦波振荡器（西勒）</text>
+<text x="1115" y="766" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" font-weight="normal" fill="#6b7785" text-anchor="start">单电源 12V  ·  1–2 MHz 连续可调  ·  Vpp ≥ 4V</text>
+<text x="1115" y="805" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="start">通信专业课程设计 · 原理图 Rev.A</text>
+<text x="1400" y="805" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="end">2026-11</text>
+<text x="60" y="700" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="14" font-weight="bold" fill="#0b5f73" text-anchor="start">设计要点</text>
+<text x="60" y="726" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="start">1. C4 为主调谐电容，C5 为频率刻度微调；C1/C2/C3/C6 选 NP0/C0G 或云母电容。</text>
+<text x="60" y="747" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="start">2. L1=100µH 决定频段；L2=1mH 高频扼流圈隔离电源，R8=1kΩ 抑制寄生振荡。</text>
+<text x="60" y="768" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="start">3. Q1 为共基放大，C1/C2 构成正反馈分压；C3 将回路与晶体管弱耦合，提高稳定性。</text>
+<text x="60" y="789" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="start">4. Q2 射极跟随器从 Q1 集电极经 C6、R7 串联接入基极，避免加载谐振回路；输出经 C7 隔直，RL=1kΩ 为测试负载。</text>
+<text x="60" y="810" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7785" text-anchor="start">5. 高频布线：L1/C4/C3 靠近 Q1，引线尽量短，地线单点汇聚到 C2 下端。</text>
+<text x="30" y="835" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="11" font-weight="normal" fill="#6b7785" text-anchor="start">Schematic: SEILER-12V-2M</text>
+<text x="1470" y="835" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="11" font-weight="normal" fill="#6b7785" text-anchor="end">Sheet 1/1</text>
+</svg></div>
+    <figcaption><b>图 2-2</b>　整机原理图（Rev.A，图中数值即最终装配值）。左侧为 12 V 输入与保护，中部为 Q1 西勒振荡器，右侧为 Q2 射极跟随缓冲与 BNC 输出。原理图较宽，可左右拖动查看。</figcaption>
+  </figure>
+
+  <h3>2.3 电路是怎么工作的</h3>
+  <ol>
+    <li><strong>直流偏置。</strong>R1、R2 把 12 V 分压得到约 2.65 V 的基极电压；Cb 把基极交流接地，Q1 工作在共基组态。Re 把发射极电流设定在 3.5 mA 左右。</li>
+    <li><strong>正反馈。</strong>C1 接在集电极与发射极之间，C2 接在发射极与地之间，两者串联分压。发射极得到的反馈电压约为集电极电压的 <code>n = C1/(C1+C2) = 0.244</code>，只要环路增益大于 1 就能起振。</li>
+    <li><strong>选频。</strong>L1 与 C4、C5、C3 以及杂散电容组成谐振回路。C3 串在集电极与回路热端之间：调 C4 时反馈比不变，这就是西勒电路相对考毕兹的核心优势。</li>
+    <li><strong>集电极供电。</strong>L2（1 mH）是高频扼流圈，把射频挡在电源之外、让直流通过；R8（1 kΩ）串联阻尼，抑制 L2 与 C3 的寄生谐振。</li>
+    <li><strong>缓冲与输出。</strong>Q1 集电极经 C6（150 pF）耦合、R7（1 kΩ）串联限流后送入 Q2 基极；Q2 射极跟随，输出经 C7（10 µF）隔直后送到 1 kΩ 负载与 BNC。</li>
+  </ol>
+
+  <div class="callout">
+    <span class="t">为什么从集电极经 C6 取信号</span>
+    <p>如果把探头或负载直接挂在谐振回路热端，会降低回路 Q 值、拉偏频率，甚至停振。C6 只取走很小一部分能量，再经 Q2 缓冲，既保证输出幅度，又不影响振荡频率。C6 同时隔断 Q1 集电极约 8.5 V 的直流，避免破坏 Q2 的偏置。</p>
+  </div>
+
+  <h3>2.4 测试点定义</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>测试点</th><th>位置</th><th>直流电位</th><th>信号特征</th><th>用途与注意</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">TP1</td><td>Q1 集电极</td><td>约 8.5 V</td><td>直流 + 射频，幅度较大</td><td>观察是否起振、测振荡幅度；用 10:1 探头</td></tr>
+        <tr><td class="mono">TP2</td><td>回路热端（L1 上端 / C3 右端）</td><td>约 0 V（经 L1 到地）</td><td>射频电压最高</td><td>只看波形，不宜长时间接入探头或负载，否则拉偏频率</td></tr>
+        <tr><td class="mono">TP3</td><td>Q2 发射极（C7 之前）</td><td>约 4.55 V</td><td>直流 + 射频，输出阻抗低</td><td><strong>测频率、测幅度、看失真的首选点</strong></td></tr>
+        <tr><td class="mono">TP4</td><td>Q1 发射极</td><td>约 1.95 V</td><td>直流 + 较小射频</td><td>判断偏置与反馈是否正常</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <span class="t">探头使用提醒</span>
+    <p>测频率优先用 TP3。示波器探头必须先用校准信号补偿，使用 10:1 挡；地线夹尽量短，并就近夹在 C2 下端的地。不要用两只探头同时夹 TP1 和 TP2，探头地线会形成额外回路，轻则频率偏移，重则寄生振荡。</p>
+  </div>
+</section>
+
+<section id="s3">
+  <h2><span class="num">03</span>电路设计与计算</h2>
+  <p class="sub">所有参数都从直流工作点、起振条件、频率公式和带载能力四步推出来。</p>
+
+  <h3>3.1 Q1 直流工作点</h3>
+  <p>先按分压近似计算，再考虑基极电流的加载修正。R1 = 22 kΩ，R2 = 6.8 kΩ，Re = 560 Ω。</p>
+  <div class="formula">
+    V<sub>B</sub> ≈ 12 × 6.8/(22 + 6.8) ≈ 2.83 V<br>
+    V<sub>E</sub> = V<sub>B</sub> − 0.7 ≈ 2.13 V　→　I<sub>E</sub> = 2.13/560 ≈ 3.8 mA
+  </div>
+  <p>分压支路电流约 <code>12/28.8 kΩ ≈ 0.42 mA</code>，是基极电流（约 38 µA，β 取 100）的 11 倍，分压近似成立。但基极电流会在 R1∥R2 ≈ 5.2 kΩ 上产生约 0.18 V 的压降，所以<strong>实测基极电压通常在 2.6–2.7 V</strong>，发射极约 1.9–2.0 V，发射极电流约 3.4–3.5 mA。调试时以这个区间为准，不要拿 2.83 V 去判断故障。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>参数</th><th>设计计算值</th><th>预计实测范围</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>V<sub>B</sub></td><td class="mono">2.83 V</td><td class="mono">2.60–2.75 V</td><td>基极电流加载后略低</td></tr>
+        <tr><td>V<sub>E</sub></td><td class="mono">2.13 V</td><td class="mono">1.90–2.05 V</td><td>V<sub>BE</sub> 取 0.7 V</td></tr>
+        <tr><td>I<sub>E</sub></td><td class="mono">3.8 mA</td><td class="mono">3.4–3.7 mA</td><td>受 β 与电阻误差影响</td></tr>
+        <tr><td>V<sub>C</sub></td><td class="mono">8.2 V</td><td class="mono">8.3–8.6 V</td><td>V<sub>C</sub> = 12 − I<sub>E</sub>·R8</td></tr>
+        <tr><td>V<sub>CE</sub></td><td class="mono">6.1 V</td><td class="mono">6.3–6.6 V</td><td>大于饱和压降，留足摆幅</td></tr>
+        <tr><td>P<sub>Q1</sub></td><td class="mono">约 23 mW</td><td class="mono">&lt; 30 mW</td><td>远低于 9018 允许功耗</td></tr>
+        <tr><td>g<sub>m</sub></td><td class="mono">约 146 mS</td><td class="mono">约 134 mS</td><td>g<sub>m</sub> = I<sub>E</sub>/V<sub>T</sub>，V<sub>T</sub>≈26 mV</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>集电极平均电位 8.5 V，射频摆动按 ±4 V 估算，集电极最低约 4.5 V，对应 V<sub>CE</sub> 最低约 2.5 V，仍高于饱和压降，因此不容易削顶。L2 允许集电极瞬时电压高于 12 V，这是扼流圈供电的正常现象。</p>
+
+  <h3>3.2 反馈系数与起振条件</h3>
+  <div class="formula">
+    n = C1/(C1 + C2) = 220/(220 + 680) ≈ 0.244
+  </div>
+  <p>n 是送回发射极的反馈电压占集电极电压的比例。环路增益可近似写成 <code>T ≈ g<sub>m</sub> · R<sub>eq</sub> · n</code>，其中 R<sub>eq</sub> 是回路的等效谐振阻抗。只要 T &gt; 1 就能起振；本机 gm 与 n 都有足够裕量，实际幅度由晶体管的非线性限幅决定。</p>
+  <p>如果实物不起振，按以下顺序排查：先确认 Q1 引脚没有接反、L1 没有开路、C1/C2/C3 没有虚焊；再确认静态电流是否达到 3 mA 以上；最后才考虑把 C1 增大到 270 pF（n 提高到约 0.284）或把 Re 减小到 470 Ω。</p>
+
+  <h3>3.3 频率计算与调谐范围</h3>
+  <p>C1、C2 先串联，等效为 <code>220×680/(220+680) ≈ 166 pF</code>；再与 C3 = 39 pF 串联，得到固定部分：</p>
+  <div class="formula">
+    C<sub>fix</sub> = 1/(1/166 + 1/39) ≈ 31.6 pF<br>
+    C<sub>Σ</sub> = C4 + C5 + C<sub>stray</sub> + C<sub>fix</sub>，取 C<sub>stray</sub> ≈ 10 pF<br>
+    f = 1/(2π√(L1·C<sub>Σ</sub>))，L1 = 100 µH
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>目标频率</th><th>所需 C<sub>Σ</sub></th><th>C4 + C5 所需值</th><th>主调电容位置</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1.00 MHz</td><td class="mono">253.3 pF</td><td class="mono">211.7 pF</td><td>接近最大容量</td></tr>
+        <tr><td class="mono">1.25 MHz</td><td class="mono">162.1 pF</td><td class="mono">120.5 pF</td><td>约 45% 刻度</td></tr>
+        <tr><td class="mono">1.50 MHz</td><td class="mono">112.6 pF</td><td class="mono">71.0 pF</td><td>约 27% 刻度</td></tr>
+        <tr><td class="mono">1.75 MHz</td><td class="mono">82.7 pF</td><td class="mono">41.1 pF</td><td>约 15% 刻度</td></tr>
+        <tr><td class="mono">2.00 MHz</td><td class="mono">63.3 pF</td><td class="mono">21.7 pF</td><td>接近最小容量</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>范围校验：C4 最小 5 pF、C5 最小 5 pF 时，C<sub>Σ</sub> ≈ 51.6 pF，对应 <strong>2.22 MHz</strong>；C4 最大 250 pF、C5 最大 30 pF 时，C<sub>Σ</sub> ≈ 321.6 pF，对应 <strong>0.89 MHz</strong>。两端各有约 10% 余量，足以覆盖 1–2 MHz。</p>
+  <p>频率与电容是平方根关系，刻度并不线性：低端每转一度频率变化小，高端变化大。报告里的“频率—刻度”表要如实记录，不能按等分刻度填写。</p>
+
+  <h3>3.4 高频扼流圈与寄生谐振</h3>
+  <p>L2 = 1 mH 与 C3 = 39 pF 会形成一个并联寄生谐振：</p>
+  <div class="formula">f<sub>par</sub> = 1/(2π√(1 mH × 39 pF)) ≈ 806 kHz</div>
+  <p>这个频率正好落在工作频段下沿附近。若不加阻尼，L2 在该频率附近阻抗升高，可能造成低端幅度异常或寄生振荡。因此串入 R8 = 1 kΩ 降低 Q 值，同时要求 L2 的自谐振频率高于 3 MHz。若实验室只有普通 1 mH 色环电感（自谐振约 1 MHz），可改用 470 µH，或把 R8 增大到 1.2 kΩ 再实测低端波形。</p>
+
+  <h3>3.5 射极跟随缓冲级</h3>
+  <p>Q2 的偏置由 R3 = R4 = 22 kΩ 分压：</p>
+  <div class="formula">
+    V<sub>B2</sub> ≈ 6 − 11 kΩ × I<sub>B2</sub> ≈ 5.26 V（β≈100）<br>
+    V<sub>E2</sub> ≈ 4.56 V　→　I<sub>E2</sub> = 4.56/680 ≈ 6.7 mA
+  </div>
+  <p>发射极电阻 R5 = 680 Ω，交流负载为 R5 与 RL（1 kΩ）并联，约 406 Ω。射随电压增益接近 1（约 0.95），输出阻抗只有几欧，因此接 1 kΩ 负载几乎不掉幅。Q2 的 V<sub>CE</sub> 约 7.4 V，功耗约 50 mW。</p>
+
+  <p>C6 与 R7 串联后接入 Q2 基极，与基极输入电阻构成分压，同时完成隔直：</p>
+  <div class="formula">
+    X<sub>C6</sub> = 1/(2πfC6)：1 MHz 时约 1061 Ω，1.5 MHz 时约 707 Ω，2 MHz 时约 531 Ω<br>
+    Q2 基极输入电阻 R<sub>in</sub> ≈ 11 kΩ ∥ [r<sub>π</sub> + (β+1)(R5∥RL)] ≈ 8.6 kΩ<br>
+    分压比 ≈ R<sub>in</sub>/√((R<sub>in</sub> + R7)² + X<sub>C6</sub>²)：1 MHz 约 0.89，1.5 MHz 约 0.89，2 MHz 约 0.90
+  </div>
+  <p>再乘射随增益 0.95，整机输出约为 <code>0.85 × V<sub>C</sub></code>。按 V<sub>C</sub> 为 6–9 Vpp 估算，输出约 5.1–7.6 Vpp；样机在 1 kΩ 负载下典型值为 5.6–6.0 Vpp，满足大于 4 V 的要求。R7 串联还起隔离作用，避免 Q2 的基极电容直接影响 Q1 集电极；150 pF 与约 9.7 kΩ 总电阻构成的高通转折点约 110 kHz，远低于 1 MHz，因此全频段衰减基本平坦。</p>
+
+  <h3>3.6 电源、电流与去耦</h3>
+  <p>D1 为 1N4007 反接保护，正常导通压降约 0.7 V，板上实际 VCC 约 11.3 V，设计值仍有余量。LED 指示灯电流取约 9 mA，限流电阻 R6 = 1 kΩ。整机电流估算如下：</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>支路</th><th>电流</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>Q1 振荡级</td><td class="mono">3.9 mA</td><td>I<sub>E1</sub> 3.5 mA + 分压支路 0.4 mA</td></tr>
+        <tr><td>Q2 缓冲级</td><td class="mono">7.0 mA</td><td>I<sub>E2</sub> 6.7 mA + 分压支路 0.3 mA</td></tr>
+        <tr><td>LED 指示</td><td class="mono">9 mA</td><td>R6 = 1 kΩ</td></tr>
+        <tr><td>合计</td><td class="mono">约 20 mA</td><td>12 V 下约 0.25 W</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>去耦电容的布置比容量更重要：C9（100 µF）放在电源入口，C8（0.1 µF）紧靠 Q1 的集电极供电端，C11（0.1 µF）紧靠 Q2，Cb（0.1 µF）紧靠 Q1 基极。高频电路里，一段 2 cm 的引线就足以让 0.1 µF 失去作用。</p>
+</section>
+
+<section id="s4">
+  <h2><span class="num">04</span>元器件清单与工具</h2>
+  <p class="sub">按清单一次性备料，避免调试时反复拆焊。所有电容除电解外均选 NP0/C0G。</p>
+
+  <h3>4.1 元器件清单（BOM）</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>序号</th><th>位号</th><th>名称 / 规格</th><th>参数</th><th>数量</th><th>备注</th></tr></thead>
+      <tbody>
+        <tr class="group"><td colspan="6">电阻（1/4 W 金属膜，1% 优先）</td></tr>
+        <tr><td>1</td><td class="mono">R1</td><td>电阻</td><td class="mono">22 kΩ</td><td>1</td><td>Q1 基极上偏置</td></tr>
+        <tr><td>2</td><td class="mono">R2</td><td>电阻</td><td class="mono">6.8 kΩ</td><td>1</td><td>Q1 基极下偏置</td></tr>
+        <tr><td>3</td><td class="mono">Re</td><td>电阻</td><td class="mono">560 Ω</td><td>1</td><td>Q1 发射极；可备 470 Ω / 680 Ω 调试</td></tr>
+        <tr><td>4</td><td class="mono">R8</td><td>电阻</td><td class="mono">1 kΩ</td><td>1</td><td>RFC 阻尼</td></tr>
+        <tr><td>5</td><td class="mono">R3</td><td>电阻</td><td class="mono">22 kΩ</td><td>1</td><td>Q2 基极上偏置</td></tr>
+        <tr><td>6</td><td class="mono">R4</td><td>电阻</td><td class="mono">22 kΩ</td><td>1</td><td>Q2 基极下偏置</td></tr>
+        <tr><td>7</td><td class="mono">R5</td><td>电阻</td><td class="mono">680 Ω</td><td>1</td><td>Q2 发射极</td></tr>
+        <tr><td>8</td><td class="mono">R7</td><td>电阻</td><td class="mono">1 kΩ</td><td>1</td><td>C6 串联，限制基极驱动</td></tr>
+        <tr><td>9</td><td class="mono">R6</td><td>电阻</td><td class="mono">1 kΩ</td><td>1</td><td>LED 限流</td></tr>
+        <tr><td>10</td><td class="mono">RL</td><td>电阻</td><td class="mono">1 kΩ</td><td>1</td><td>板上测试负载，可预留不焊</td></tr>
+        <tr class="group"><td colspan="6">电容</td></tr>
+        <tr><td>11</td><td class="mono">C1</td><td>瓷片电容 NP0/C0G</td><td class="mono">220 pF / 50 V</td><td>1</td><td>反馈分压上臂</td></tr>
+        <tr><td>12</td><td class="mono">C2</td><td>瓷片电容 NP0/C0G</td><td class="mono">680 pF / 50 V</td><td>1</td><td>反馈分压下臂</td></tr>
+        <tr><td>13</td><td class="mono">C3</td><td>瓷片电容 NP0/C0G</td><td class="mono">39 pF / 50 V</td><td>1</td><td>西勒串联电容</td></tr>
+        <tr><td>14</td><td class="mono">C4</td><td>薄膜可变电容</td><td class="mono">5–250 pF</td><td>1</td><td>主调；有空气可变电容优先</td></tr>
+        <tr><td>15</td><td class="mono">C5</td><td>陶瓷微调电容</td><td class="mono">5–30 pF</td><td>1</td><td>频率刻度校准</td></tr>
+        <tr><td>16</td><td class="mono">C6</td><td>瓷片电容 NP0/C0G</td><td class="mono">150 pF / 50 V</td><td>1</td><td>缓冲级耦合；可备 100 pF / 220 pF</td></tr>
+        <tr><td>17</td><td class="mono">Cb</td><td>独石电容</td><td class="mono">0.1 µF</td><td>1</td><td>Q1 基极交流接地</td></tr>
+        <tr><td>18</td><td class="mono">C8</td><td>独石电容</td><td class="mono">0.1 µF</td><td>1</td><td>Q1 供电去耦</td></tr>
+        <tr><td>19</td><td class="mono">C11</td><td>独石电容</td><td class="mono">0.1 µF</td><td>1</td><td>Q2 供电去耦</td></tr>
+        <tr><td>20</td><td class="mono">C7</td><td>铝电解电容</td><td class="mono">10 µF / 25 V</td><td>1</td><td>输出隔直，注意极性</td></tr>
+        <tr><td>21</td><td class="mono">C9</td><td>铝电解电容</td><td class="mono">100 µF / 25 V</td><td>1</td><td>电源储能，注意极性</td></tr>
+        <tr class="group"><td colspan="6">电感与半导体</td></tr>
+        <tr><td>22</td><td class="mono">L1</td><td>轴向色环电感</td><td class="mono">100 µH</td><td>1</td><td>自谐振 ≥ 5 MHz，直流电阻 &lt; 1 Ω</td></tr>
+        <tr><td>23</td><td class="mono">L2</td><td>轴向色环电感 / RFC</td><td class="mono">1 mH</td><td>1</td><td>自谐振 ≥ 3 MHz；否则改用 470 µH</td></tr>
+        <tr><td>24</td><td class="mono">Q1、Q2</td><td>NPN 高频三极管</td><td class="mono">2SC9018 / TO-92</td><td>2</td><td>Q1 选 β 较大的一只；备 2 只</td></tr>
+        <tr><td>25</td><td class="mono">D1</td><td>整流二极管</td><td class="mono">1N4007</td><td>1</td><td>电源反接保护</td></tr>
+        <tr><td>26</td><td class="mono">LED1</td><td>发光二极管</td><td class="mono">红色 3 mm</td><td>1</td><td>电源指示</td></tr>
+        <tr class="group"><td colspan="6">接插件与结构件</td></tr>
+        <tr><td>27</td><td class="mono">J1</td><td>DC 电源插座</td><td class="mono">DC-005，5.5×2.1 mm</td><td>1</td><td>中心正极</td></tr>
+        <tr><td>28</td><td class="mono">J2</td><td>BNC 母座</td><td class="mono">50 Ω</td><td>1</td><td>也可用 2P 排针 + 屏蔽线</td></tr>
+        <tr><td>29</td><td class="mono">—</td><td>洞洞板</td><td class="mono">100×70 mm，2.54 mm 孔距</td><td>1</td><td>单面或双面均可</td></tr>
+        <tr><td>30</td><td class="mono">—</td><td>TO-92 插座</td><td class="mono">3P</td><td>2</td><td>可选，便于换管与防烫</td></tr>
+        <tr><td>31</td><td class="mono">—</td><td>单芯铜线 / 漆包线</td><td class="mono">0.5 mm</td><td>适量</td><td>地线母线、跨接线</td></tr>
+        <tr><td>32</td><td class="mono">—</td><td>屏蔽线 / 同轴电缆</td><td class="mono">—</td><td>适量</td><td>输出到 BNC、探头连接</td></tr>
+        <tr><td>33</td><td class="mono">—</td><td>焊锡丝、助焊剂、吸锡带</td><td class="mono">0.8 mm 含松香</td><td>适量</td><td>焊接与返修</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.2 关键器件怎么挑</h3>
+  <ul>
+    <li><strong>C1、C2、C3、C6 必须用 NP0/C0G。</strong>Y5V、Z5U 的容量随温度和直流偏压大幅变化，会让频率漂移、幅度不稳。云母电容更好，但体积大。</li>
+    <li><strong>C4 优先空气可变或优质薄膜可变。</strong>常见 polyvaricon（5–250 pF）便宜、体积小，但介质损耗大、温漂明显；验收前可用固定 NP0 电容并联校准，确认频率准确后再装回。</li>
+    <li><strong>L1 看自谐振频率，不只看电感量。</strong>100 µH 色环电感的自谐振若低于 4 MHz，在 2 MHz 附近 Q 值会明显下降。购买时查规格书，或用手头的 LCR 表实测。</li>
+    <li><strong>L2 是 RFC，不是储能电感。</strong>要求高自谐振频率和较低直流电阻；1 mH 普通色环电感的寄生电容较大，务必配合 R8 阻尼。</li>
+    <li><strong>9018 的 β 不必强求配对。</strong>Q1 选 β 在 100–150 的一只，Q2 选 β 80–150 即可。TO-92 引脚为 E-B-C，焊接前一定用万用表确认，不同厂商存在差异。<sup><a href="#cite-3">[3]</a></sup></li>
+  </ul>
+
+  <h3>4.3 工具与耗材</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>类别</th><th>工具</th><th>要求 / 用途</th></tr></thead>
+      <tbody>
+        <tr><td>焊接</td><td>恒温烙铁 30–40 W、尖头</td><td>温度 330–350 °C；焊点小而亮</td></tr>
+        <tr><td>焊接</td><td>焊锡丝 0.8 mm、助焊剂、吸锡带、斜口钳、镊子</td><td>拆焊与修整引脚</td></tr>
+        <tr><td>测量</td><td>数字万用表</td><td>测静态电压、通断、电阻</td></tr>
+        <tr><td>测量</td><td>示波器，带宽 ≥ 100 MHz，10:1 探头</td><td>看波形、测幅度与频率</td></tr>
+        <tr><td>测量</td><td>频率计（可用示波器频率测量替代）</td><td>精确读到 1 kHz</td></tr>
+        <tr><td>测量</td><td>LCR 表或电感电容表</td><td>实测 L1、C1/C2/C3，避免标称误差</td></tr>
+        <tr><td>电源</td><td>直流稳压电源 0–15 V / 1 A，可限流</td><td>首次上电限流 50 mA</td></tr>
+        <tr><td>辅助</td><td>面包板、绝缘调谐棒、放大镜/台灯、防静电手环</td><td>预验证、调 C4/C5、检查焊点</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><span class="num">05</span>实物制作</h2>
+  <p class="sub">先在面包板验证电路是否起振，再在洞洞板上按高频规则布局、焊接。</p>
+
+  <h3>5.1 面包板预验证（可选但强烈建议）</h3>
+  <p>面包板适合验证拓扑和偏置，不适合校准频率。面包板每排触点有 2–5 pF 分布电容，加上长引线电感，实测频率通常比计算值低 5%–15%，2 MHz 以上尤其明显。</p>
+  <ol class="steps">
+    <li><b>搭振荡级。</b>先只装 Q1、R1、R2、Re、Cb、C1、C2、C3、L1、C4、C5、L2、R8，不装缓冲级。所有元件引脚剪短，L1 与 C4 尽量靠近 Q1。</li>
+    <li><b>共地和去耦。</b>用一根粗铜线做地母线，C2 下端、Re 下端、C8 地、电源地都接到这根线上；C8 紧靠 Q1 集电极供电点。</li>
+    <li><b>限流上电。</b>电源设 12 V、限流 50 mA，观察电流。正常应在 5 mA 左右；若瞬间到限流值，立即断电查短路。</li>
+    <li><b>看是否起振。</b>万用表测 V<sub>B</sub>、V<sub>E</sub>、V<sub>C</sub>，应在 2.6 V / 1.95 V / 8.5 V 附近；示波器 10:1 探头接 TP1，应看到几伏的高频正弦。</li>
+    <li><b>记录但不校准。</b>记下频率与幅度，确认拓扑可用即可。不要在这个阶段调 C5，进入洞洞板后再做频率标定。</li>
+  </ol>
+
+  <div class="callout warn">
+    <span class="t">面包板常见坑</span>
+    <p>电源轨中间有断口，跨接时容易漏接；电解电容引脚太长会引入电感；手靠近回路会让频率明显偏移。若面包板上不起振，先别怀疑参数，优先检查 L1 是否插紧、C1/C2 是否插错排。</p>
+  </div>
+
+  <h3>5.2 洞洞板布局</h3>
+  <figure class="fig">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 730">
+<rect x="0" y="0" width="1000" height="730" fill="#ffffff"/>
+<rect x="90" y="70" width="800" height="560" rx="6" fill="#f5f2e9" stroke="#8a7f6a" stroke-width="2"/>
+<line x1="266" y1="70" x2="266" y2="630" stroke="#c9d1d9" stroke-width="1.4" stroke-dasharray="5 4"/>
+<line x1="642" y1="70" x2="642" y2="630" stroke="#c9d1d9" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="178" y="98" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b6e69" text-anchor="middle">电源区</text>
+<text x="454" y="98" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b6e69" text-anchor="middle">振荡区（核心）</text>
+<text x="766" y="98" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0b6e69" text-anchor="middle">缓冲 / 输出区</text>
+<rect x="108" y="125" width="62" height="48" rx="4" fill="#fff8e8" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="139.0" y="147.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">J1</text>
+<text x="139.0" y="163.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">12V IN</text>
+<rect x="185" y="125" width="55" height="40" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="212.5" y="143.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">D1</text>
+<text x="212.5" y="159.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">1N4007</text>
+<rect x="185" y="185" width="55" height="40" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="212.5" y="203.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">R6+LED</text>
+<text x="212.5" y="219.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">指示</text>
+<rect x="120" y="255" width="55" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="147.5" y="280.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C9</text>
+<text x="147.5" y="296.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">100µF</text>
+<rect x="195" y="255" width="55" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="222.5" y="280.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C8</text>
+<text x="222.5" y="296.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">0.1µF</text>
+<rect x="120" y="370" width="130" height="55" rx="4" fill="#f7f7f7" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="185.0" y="395.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">电源地 / 去耦</text>
+<text x="185.0" y="411.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">星点接地</text>
+<rect x="295" y="140" width="90" height="60" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="340.0" y="168.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">R1/R2</text>
+<text x="340.0" y="184.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">22k/6.8k</text>
+<rect x="410" y="140" width="80" height="45" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="450.0" y="160.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">Cb</text>
+<text x="450.0" y="176.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">0.1µF</text>
+<rect x="520" y="140" width="80" height="45" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="560.0" y="160.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">L2+R8</text>
+<text x="560.0" y="176.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">1mH/1kΩ</text>
+<rect x="295" y="220" width="95" height="70" rx="4" fill="#eef6f5" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="342.5" y="253.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">Q1</text>
+<text x="342.5" y="269.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">2SC9018</text>
+<rect x="420" y="225" width="70" height="45" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="455.0" y="245.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C1</text>
+<text x="455.0" y="261.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">220pF</text>
+<rect x="420" y="285" width="70" height="45" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="455.0" y="305.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C2</text>
+<text x="455.0" y="321.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">680pF</text>
+<rect x="295" y="320" width="80" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="335.0" y="345.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">Re</text>
+<text x="335.0" y="361.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">560Ω</text>
+<rect x="405" y="355" width="75" height="42" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="442.5" y="374.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C3</text>
+<text x="442.5" y="390.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">39pF</text>
+<rect x="500" y="210" width="75" height="85" rx="4" fill="#eef6f5" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="537.5" y="250.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">L1</text>
+<text x="537.5" y="266.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">100µH</text>
+<rect x="500" y="320" width="80" height="55" rx="4" fill="#fff4e5" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="540.0" y="345.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C4</text>
+<text x="540.0" y="361.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">主调电容</text>
+<rect x="595" y="320" width="60" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="625.0" y="345.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C5</text>
+<text x="625.0" y="361.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">微调</text>
+<text x="565" y="400" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="11" fill="#b45309" text-anchor="middle">C4 旋钮朝板边</text>
+<rect x="680" y="140" width="95" height="70" rx="4" fill="#eef6f5" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="727.5" y="173.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">Q2</text>
+<text x="727.5" y="189.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">2SC9018</text>
+<rect x="790" y="140" width="75" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="827.5" y="165.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">R3/R4</text>
+<text x="827.5" y="181.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">22k/22k</text>
+<rect x="790" y="220" width="75" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="827.5" y="245.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C6+R7</text>
+<text x="827.5" y="261.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">150pF/1k</text>
+<rect x="680" y="270" width="80" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="720.0" y="295.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">R5</text>
+<text x="720.0" y="311.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">680Ω</text>
+<rect x="775" y="305" width="80" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="815.0" y="330.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">C7</text>
+<text x="815.0" y="346.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">10µF</text>
+<rect x="775" y="380" width="70" height="55" rx="4" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.2"/>
+<text x="810.0" y="405.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle">RL</text>
+<text x="810.0" y="421.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="10" fill="#6b7785" text-anchor="middle">1kΩ</text>
+<rect x="875" y="305" width="8" height="55" rx="4" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/>
+<text x="879.0" y="330.5" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1f2933" text-anchor="middle"></text>
+<circle cx="872" cy="332" r="16" fill="#ffffff" stroke="#8a7f6a" stroke-width="1.5"/>
+<circle cx="872" cy="332" r="5" fill="#8a7f6a"/>
+<text x="850" y="370" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#1f2933" text-anchor="end">BNC</text>
+<path d="M250,500 L850,500" stroke="#b45309" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="550" y="525" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#b45309" text-anchor="middle">接地母线：C2 下端为单点汇聚点，粗线/铺铜</text>
+<line x1="90" y1="665" x2="890" y2="665" stroke="#1f2933" stroke-width="1"/>
+<text x="490.0" y="685" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#1f2933" text-anchor="middle">100 mm</text>
+<line x1="60" y1="70" x2="60" y2="630" stroke="#1f2933" stroke-width="1"/>
+<text x="45" y="350.0" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#1f2933" text-anchor="middle" transform="rotate(-90 45 350.0)">70 mm</text>
+<text x="500" y="640" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="13" fill="#6b7785" text-anchor="middle">布局示意（非精确孔位）：按“电源 → 振荡 → 缓冲/输出”一字排开，LC 回路集中在 Q1 周围。</text>
+</svg>
+    <figcaption><b>图 5-1</b>　100×70 mm 洞洞板布局示意（非精确孔位）。按“电源 → 振荡 → 缓冲/输出”一字排开，LC 回路集中在 Q1 周围，C4 旋钮朝板边，地线单点汇聚到 C2 下端。</figcaption>
+  </figure>
+
+  <p>布局要点：</p>
+  <ul>
+    <li><strong>分区。</strong>左侧 25 mm 为电源区（J1、D1、R6、LED、C9、C8）；中部 35 mm 为振荡区（Q1、R1/R2、Re、Cb、C1/C2/C3、L1、C4/C5、L2/R8）；右侧 40 mm 为缓冲与输出区（Q2、R3/R4、R5、C6/R7、C7、RL、J2）。</li>
+    <li><strong>回路紧凑。</strong>L1、C4、C5、C3 与 Q1 引脚的距离控制在 15 mm 以内，走线短而直，不要绕大圈。</li>
+    <li><strong>单点地。</strong>以 C2 下端为星点，Re 地、C8 地、C9 地、C7 地、BNC 地都汇到这里。洞洞板不要整板乱铺地，否则地线电流会耦合进回路。</li>
+    <li><strong>可变电容靠边。</strong>C4 的旋钮朝向板边，方便调节；焊好后用热熔胶或垫片固定，防止转动时带动引脚。</li>
+    <li><strong>输出靠边。</strong>J2 放在右侧板边，输出线短；C6 到 Q2 基极的线尽量短，远离 L1。</li>
+  </ul>
+
+  <h3>5.3 焊接顺序</h3>
+  <ol class="steps">
+    <li><b>电源与保护。</b>焊 J1、D1、R6、LED、C9、C8。注意 D1 的方向（色环朝电源正极侧）和 LED 极性。焊完用万用表测 J1 两端电阻，应大于 1 kΩ，不能接近 0。</li>
+    <li><b>电阻。</b>焊 R1、R2、Re、R8、R3、R4、R5、R7、RL。逐只测量后再焊，避免把 22 kΩ 与 680 Ω 混淆。</li>
+    <li><b>电感。</b>焊 L2、L1。L1 立式安装或卧式贴板，引脚尽量短；L2 与 R8 串联后接集电极。</li>
+    <li><b>固定电容。</b>焊 C1、C2、C3、C6、Cb、C11。NP0 瓷片没有极性，但容量字迹很小，焊前用放大镜核对。</li>
+    <li><b>晶体管。</b>最后焊 Q1、Q2，或先装 TO-92 插座。面对印字面、引脚朝下，从左到右为 E-B-C；不同批次可能不同，务必用万用表二极管挡确认。焊接时间不超过 3 s，必要时用镊子夹住引脚散热。</li>
+    <li><b>可变电容。</b>焊 C4、C5。先焊引脚再固定外壳，避免助焊剂进入介质；焊完转动几圈，确认不卡滞。</li>
+    <li><b>电解与接插件。</b>焊 C7、C9（长脚为正），再焊 J2 与测试点。C7 正极朝 Q2 发射极，负极朝 BNC。</li>
+    <li><b>清洁与检查。</b>用无水酒精或洗板水清洁助焊剂，放大镜检查桥连、虚焊、引脚毛刺。特别是 Q1 的 B-C 之间、C4 相邻引脚。</li>
+  </ol>
+
+  <h3>5.4 高频布线六条</h3>
+  <ol>
+    <li><strong>回路元件紧凑。</strong>L1、C4、C5、C3 围绕 Q1 布置，引线长度控制在 15 mm 内。每多 10 mm 引线，就多约 8 nH 电感，足以让 2 MHz 的频率偏低几十 kHz。</li>
+    <li><strong>地线单点星形。</strong>所有地汇聚到 C2 下端，避免大电流地线从回路下方穿过。电源回流和输出回流不要混入振荡级地线。</li>
+    <li><strong>去耦就近。</strong>C8 紧靠 Q1 集电极供电端，C11 紧靠 Q2，C9 放入口。0.1 µF 的引线越短越好，必要时直接把电容焊在晶体管引脚旁。</li>
+    <li><strong>强弱分离。</strong>C6 到 Q2 基极的走线短；输出 BNC 与 L1 保持距离；不要把输出线从 L1 上方跨过。</li>
+    <li><strong>探头与地线夹。</strong>用 10:1 探头，地线夹就近夹在星点；不要用长地线夹去够远处的“地”，那会形成天线，测到的可能是寄生振荡。</li>
+    <li><strong>机械稳定。</strong>C4 固定、电感立式安装、板子四角垫高。调试时用绝缘调谐棒，手不要碰回路；人体电容会让频率瞬间偏移。</li>
+  </ol>
+
+  <h3>5.5 上电前检查</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>检查项</th><th>方法</th><th>合格标准</th></tr></thead>
+      <tbody>
+        <tr><td>电源短路</td><td>万用表电阻挡测 J1 两端</td><td>&gt; 1 kΩ，无蜂鸣</td></tr>
+        <tr><td>电源极性</td><td>查 D1、C9、C7、LED 方向</td><td>电解长脚为正，D1 色环朝正</td></tr>
+        <tr><td>晶体管引脚</td><td>二极管挡测 B-E、B-C 正向压降</td><td>约 0.6–0.7 V，反向不通</td></tr>
+        <tr><td>焊点</td><td>放大镜逐点看，重点查 Q1 周围</td><td>无桥连、无虚焊、无引脚毛刺</td></tr>
+        <tr><td>电感</td><td>万用表测 L1、L2 直流电阻</td><td>L1 &lt; 1 Ω，L2 几欧到几十欧，不能开路</td></tr>
+        <tr><td>电源设置</td><td>稳压电源设 12 V、限流 50 mA</td><td>限流指示灯未亮</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s6">
+  <h2><span class="num">06</span>调试与性能测试</h2>
+  <p class="sub">先让电路“活着”（偏置正常、起振），再让它“好听”（频率准、幅度够、波形干净）。</p>
+
+  <h3>6.1 分级上电</h3>
+  <ol class="steps">
+    <li><b>断电检查。</b>完成 5.5 的全部检查，确认电源两端电阻大于 1 kΩ。</li>
+    <li><b>限流上电。</b>12 V、限流 50 mA，接通电源。LED 应亮，电流约 20 mA；若直接到 50 mA，立即断电，摸 Q1/Q2 是否发热，查引脚与电解极性。</li>
+    <li><b>测静态电压。</b>按 6.2 的表逐点测量。先保证 Q1 的 V<sub>B</sub>、V<sub>E</sub>、V<sub>C</sub> 在范围内，再测 Q2。</li>
+    <li><b>看振荡。</b>示波器 10:1 探头接 TP1，时基 0.5 µs/div，垂直 1 V/div。应看到连续正弦，Vpp 约 6–9 V。若只有直流，进入 6.7 故障排查。</li>
+    <li><b>看输出。</b>探头移到 TP3，接上 1 kΩ 负载（RL 或外接），应看到 Vpp 约 5–6 V 的干净正弦。此时再把限流放宽到 200 mA。</li>
+  </ol>
+
+  <h3>6.2 静态电压对照表</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>测点</th><th>正常范围</th><th>典型值</th><th>异常时的排查方向</th></tr></thead>
+      <tbody>
+        <tr><td>Q1 V<sub>B</sub>（TP4 旁基极）</td><td class="mono">2.60–2.75 V</td><td class="mono">2.65 V</td><td>R1/R2 错值、Cb 短路、Q1 基极虚焊</td></tr>
+        <tr><td>Q1 V<sub>E</sub>（TP4）</td><td class="mono">1.90–2.05 V</td><td class="mono">1.95 V</td><td>Re 错值、Q1 引脚接反</td></tr>
+        <tr><td>Q1 V<sub>C</sub>（TP1）</td><td class="mono">8.3–8.6 V</td><td class="mono">8.5 V</td><td>L2 开路、R8 错值、Q1 损坏</td></tr>
+        <tr><td>Q2 V<sub>B</sub></td><td class="mono">5.1–5.4 V</td><td class="mono">5.26 V</td><td>R3/R4 错值、C6 漏电</td></tr>
+        <tr><td>Q2 V<sub>E</sub>（TP3）</td><td class="mono">4.4–4.7 V</td><td class="mono">4.56 V</td><td>R5 错值、Q2 引脚接反</td></tr>
+        <tr><td>Q2 V<sub>C</sub></td><td class="mono">约 11.3 V</td><td class="mono">11.3 V</td><td>Q2 集电极未接、供电断</td></tr>
+        <tr><td>整机电流</td><td class="mono">18–23 mA</td><td class="mono">20 mA</td><td>LED 电阻错、短路、停振</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.3 频率校准：先高后低</h3>
+  <p>校准顺序遵循可变电容的常规做法：<strong>先调高端，再核对低端</strong>。因为 C5 微调电容在高频端（C4 容量最小）时占 C<sub>Σ</sub> 的比例最大，调节最灵敏。</p>
+  <ol class="steps">
+    <li><b>接频率计。</b>频率计接 TP3（经 10:1 探头或 100 pF 隔直电容），示波器同时监测波形。确保负载为 1 kΩ。</li>
+    <li><b>高端校准。</b>把 C4 全部旋出（容量最小），调 C5，使频率正好为 <strong>2.000 MHz</strong>。若调到 C5 最小仍低于 2.000 MHz，说明杂散电容过大或 C3 偏大，可把 C3 换为 33 pF 或缩短回路引线。</li>
+    <li><b>低端核对。</b>把 C4 全部旋入（容量最大），频率应低于 <strong>1.000 MHz</strong>，设计值约 0.89 MHz。若低端高于 1.000 MHz，说明主调电容容量不足或 L1 偏小，可在 C4 两端并联 10–22 pF 的 NP0 电容；若低端远低于 1.000 MHz，属于正常余量，不必处理。</li>
+    <li><b>标定刻度。</b>分别在 1.00、1.25、1.50、1.75、2.00 MHz 处停下，记录 C4 的机械刻度，做一张纸质量程卡贴在板上。不要按等分刻度标，频率与电容是平方根关系。</li>
+    <li><b>复测。</b>来回转动 C4 三次，确认同一刻度对应的频率重复性优于 ±5 kHz；若漂移大，检查 C4 是否松动、手是否靠近回路。</li>
+  </ol>
+
+  <div class="callout">
+    <span class="t">调谐工具</span>
+    <p>调 C4、C5 必须用绝缘调谐棒或塑料螺丝刀。金属螺丝刀会改变回路电容，手靠近也会让频率偏移几十 kHz。调完后退开 20 cm 再读数。</p>
+  </div>
+
+  <h3>6.4 幅度与失真调整：C6 → R7 → R5 → Re</h3>
+  <p>频率校准完成后，再把 1.5 MHz 处的输出调到 Vpp 约 6 V 且波形对称。按以下顺序，每次只动一个元件，动完重新测频率与幅度。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>顺序</th><th>元件</th><th>调大后的效果</th><th>调小后的效果</th><th>目标</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="mono">C6</td><td>驱动增强，Vpp 上升，削顶风险增加</td><td>Vpp 下降，波形更干净</td><td>1.5 MHz、1 kΩ 负载下 Vpp 约 6 V，无削顶</td></tr>
+        <tr><td>2</td><td class="mono">R7</td><td>串联电阻增大，基极电压下降，驱动减弱，Vpp 下降</td><td>驱动增强，Vpp 上升，削顶风险增加</td><td>与 C6 配合，使两端幅度差小于 1 V</td></tr>
+        <tr><td>3</td><td class="mono">R5</td><td>I<sub>E2</sub> 减小，输出幅度下降，输出阻抗升高</td><td>I<sub>E2</sub> 增大，带载能力增强，功耗增大</td><td>I<sub>E2</sub> 保持 6–8 mA，接 1 kΩ 不掉幅</td></tr>
+        <tr><td>4</td><td class="mono">Re</td><td>I<sub>E1</sub> 减小，gm 下降，幅度下降甚至停振</td><td>I<sub>E1</sub> 增大，幅度上升，失真与功耗增大</td><td>I<sub>E1</sub> 保持 3.4–3.8 mA，起振可靠</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>推荐做法：先保持 C6 = 150 pF、R7 = 1 kΩ，在 1.5 MHz 测一次；若 Vpp 不足 4 V，把 C6 换成 220 pF，或把 R7 减到 820 Ω；若出现削顶，换回 100 pF，或把 R7 增到 1.2 kΩ。R5 与 Re 只在前面两步无法兼顾时才动，且每次只换一档（R5：680→560 Ω，Re：560→470 Ω）。</p>
+
+  <div class="callout warn">
+    <span class="t">联调相互影响</span>
+    <p>改变 C6 会轻微改变 Q1 集电极的负载，从而让频率偏移几 kHz；改变 Re 会改变 gm，也可能让频率轻微变化。因此每调一次幅度，都要回到 6.3 复核频率。最终记录必须是“调好之后”的稳定值。</p>
+  </div>
+
+  <h3>6.5 测试记录表</h3>
+  <p>把下表抄进实验记录本，每个频点测三次取平均。Vpp 指示波器 10:1 探头读数（若示波器已按 10:1 衰减显示，则直接读）。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>设定频率</th><th>实测频率</th><th>TP1 Vpp</th><th>TP3 Vpp（1 kΩ）</th><th>整机电流</th><th>波形判定</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1.00 MHz</td><td>　</td><td>　</td><td>　</td><td>　</td><td>□ 合格　□ 削顶　□ 停振</td></tr>
+        <tr><td class="mono">1.25 MHz</td><td>　</td><td>　</td><td>　</td><td>　</td><td>□ 合格　□ 削顶　□ 停振</td></tr>
+        <tr><td class="mono">1.50 MHz</td><td>　</td><td>　</td><td>　</td><td>　</td><td>□ 合格　□ 削顶　□ 停振</td></tr>
+        <tr><td class="mono">1.75 MHz</td><td>　</td><td>　</td><td>　</td><td>　</td><td>□ 合格　□ 削顶　□ 停振</td></tr>
+        <tr><td class="mono">2.00 MHz</td><td>　</td><td>　</td><td>　</td><td>　</td><td>□ 合格　□ 削顶　□ 停振</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.6 波形判读</h3>
+  <figure class="fig">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480">
+<rect x="0" y="0" width="1200" height="480" fill="#ffffff"/>
+<rect x="30" y="60" width="340" height="270" fill="#fcfbf7" stroke="#c9d1d9" stroke-width="1.2"/>
+<g stroke="#d9e0e3" stroke-width="1">
+<line x1="30" y1="80" x2="30" y2="320"/>
+<line x1="60" y1="80" x2="60" y2="320"/>
+<line x1="90" y1="80" x2="90" y2="320"/>
+<line x1="120" y1="80" x2="120" y2="320"/>
+<line x1="150" y1="80" x2="150" y2="320"/>
+<line x1="180" y1="80" x2="180" y2="320"/>
+<line x1="210" y1="80" x2="210" y2="320"/>
+<line x1="240" y1="80" x2="240" y2="320"/>
+<line x1="270" y1="80" x2="270" y2="320"/>
+<line x1="300" y1="80" x2="300" y2="320"/>
+<line x1="330" y1="80" x2="330" y2="320"/>
+<line x1="30" y1="80" x2="330" y2="80"/>
+<line x1="30" y1="110" x2="330" y2="110"/>
+<line x1="30" y1="140" x2="330" y2="140"/>
+<line x1="30" y1="170" x2="330" y2="170"/>
+<line x1="30" y1="200" x2="330" y2="200"/>
+<line x1="30" y1="230" x2="330" y2="230"/>
+<line x1="30" y1="260" x2="330" y2="260"/>
+<line x1="30" y1="290" x2="330" y2="290"/>
+<line x1="30" y1="320" x2="330" y2="320"/>
+</g>
+<line x1="30" y1="200" x2="330" y2="200" stroke="#aab4bd" stroke-width="1.2"/>
+<path d="M 30.0,200.0 L 31.0,190.6 L 32.0,181.3 L 33.0,172.2 L 34.0,163.4 L 35.0,155.0 L 36.0,147.1 L 37.0,139.8 L 38.0,133.1 L 39.0,127.2 L 40.0,122.1 L 41.0,117.8 L 42.0,114.4 L 43.0,112.0 L 44.0,110.5 L 45.0,110.0 L 46.0,110.5 L 47.0,112.0 L 48.0,114.4 L 49.0,117.8 L 50.0,122.1 L 51.0,127.2 L 52.0,133.1 L 53.0,139.8 L 54.0,147.1 L 55.0,155.0 L 56.0,163.4 L 57.0,172.2 L 58.0,181.3 L 59.0,190.6 L 60.0,200.0 L 61.0,209.4 L 62.0,218.7 L 63.0,227.8 L 64.0,236.6 L 65.0,245.0 L 66.0,252.9 L 67.0,260.2 L 68.0,266.9 L 69.0,272.8 L 70.0,277.9 L 71.0,282.2 L 72.0,285.6 L 73.0,288.0 L 74.0,289.5 L 75.0,290.0 L 76.0,289.5 L 77.0,288.0 L 78.0,285.6 L 79.0,282.2 L 80.0,277.9 L 81.0,272.8 L 82.0,266.9 L 83.0,260.2 L 84.0,252.9 L 85.0,245.0 L 86.0,236.6 L 87.0,227.8 L 88.0,218.7 L 89.0,209.4 L 90.0,200.0 L 91.0,190.6 L 92.0,181.3 L 93.0,172.2 L 94.0,163.4 L 95.0,155.0 L 96.0,147.1 L 97.0,139.8 L 98.0,133.1 L 99.0,127.2 L 100.0,122.1 L 101.0,117.8 L 102.0,114.4 L 103.0,112.0 L 104.0,110.5 L 105.0,110.0 L 106.0,110.5 L 107.0,112.0 L 108.0,114.4 L 109.0,117.8 L 110.0,122.1 L 111.0,127.2 L 112.0,133.1 L 113.0,139.8 L 114.0,147.1 L 115.0,155.0 L 116.0,163.4 L 117.0,172.2 L 118.0,181.3 L 119.0,190.6 L 120.0,200.0 L 121.0,209.4 L 122.0,218.7 L 123.0,227.8 L 124.0,236.6 L 125.0,245.0 L 126.0,252.9 L 127.0,260.2 L 128.0,266.9 L 129.0,272.8 L 130.0,277.9 L 131.0,282.2 L 132.0,285.6 L 133.0,288.0 L 134.0,289.5 L 135.0,290.0 L 136.0,289.5 L 137.0,288.0 L 138.0,285.6 L 139.0,282.2 L 140.0,277.9 L 141.0,272.8 L 142.0,266.9 L 143.0,260.2 L 144.0,252.9 L 145.0,245.0 L 146.0,236.6 L 147.0,227.8 L 148.0,218.7 L 149.0,209.4 L 150.0,200.0 L 151.0,190.6 L 152.0,181.3 L 153.0,172.2 L 154.0,163.4 L 155.0,155.0 L 156.0,147.1 L 157.0,139.8 L 158.0,133.1 L 159.0,127.2 L 160.0,122.1 L 161.0,117.8 L 162.0,114.4 L 163.0,112.0 L 164.0,110.5 L 165.0,110.0 L 166.0,110.5 L 167.0,112.0 L 168.0,114.4 L 169.0,117.8 L 170.0,122.1 L 171.0,127.2 L 172.0,133.1 L 173.0,139.8 L 174.0,147.1 L 175.0,155.0 L 176.0,163.4 L 177.0,172.2 L 178.0,181.3 L 179.0,190.6 L 180.0,200.0 L 181.0,209.4 L 182.0,218.7 L 183.0,227.8 L 184.0,236.6 L 185.0,245.0 L 186.0,252.9 L 187.0,260.2 L 188.0,266.9 L 189.0,272.8 L 190.0,277.9 L 191.0,282.2 L 192.0,285.6 L 193.0,288.0 L 194.0,289.5 L 195.0,290.0 L 196.0,289.5 L 197.0,288.0 L 198.0,285.6 L 199.0,282.2 L 200.0,277.9 L 201.0,272.8 L 202.0,266.9 L 203.0,260.2 L 204.0,252.9 L 205.0,245.0 L 206.0,236.6 L 207.0,227.8 L 208.0,218.7 L 209.0,209.4 L 210.0,200.0 L 211.0,190.6 L 212.0,181.3 L 213.0,172.2 L 214.0,163.4 L 215.0,155.0 L 216.0,147.1 L 217.0,139.8 L 218.0,133.1 L 219.0,127.2 L 220.0,122.1 L 221.0,117.8 L 222.0,114.4 L 223.0,112.0 L 224.0,110.5 L 225.0,110.0 L 226.0,110.5 L 227.0,112.0 L 228.0,114.4 L 229.0,117.8 L 230.0,122.1 L 231.0,127.2 L 232.0,133.1 L 233.0,139.8 L 234.0,147.1 L 235.0,155.0 L 236.0,163.4 L 237.0,172.2 L 238.0,181.3 L 239.0,190.6 L 240.0,200.0 L 241.0,209.4 L 242.0,218.7 L 243.0,227.8 L 244.0,236.6 L 245.0,245.0 L 246.0,252.9 L 247.0,260.2 L 248.0,266.9 L 249.0,272.8 L 250.0,277.9 L 251.0,282.2 L 252.0,285.6 L 253.0,288.0 L 254.0,289.5 L 255.0,290.0 L 256.0,289.5 L 257.0,288.0 L 258.0,285.6 L 259.0,282.2 L 260.0,277.9 L 261.0,272.8 L 262.0,266.9 L 263.0,260.2 L 264.0,252.9 L 265.0,245.0 L 266.0,236.6 L 267.0,227.8 L 268.0,218.7 L 269.0,209.4 L 270.0,200.0 L 271.0,190.6 L 272.0,181.3 L 273.0,172.2 L 274.0,163.4 L 275.0,155.0 L 276.0,147.1 L 277.0,139.8 L 278.0,133.1 L 279.0,127.2 L 280.0,122.1 L 281.0,117.8 L 282.0,114.4 L 283.0,112.0 L 284.0,110.5 L 285.0,110.0 L 286.0,110.5 L 287.0,112.0 L 288.0,114.4 L 289.0,117.8 L 290.0,122.1 L 291.0,127.2 L 292.0,133.1 L 293.0,139.8 L 294.0,147.1 L 295.0,155.0 L 296.0,163.4 L 297.0,172.2 L 298.0,181.3 L 299.0,190.6 L 300.0,200.0 L 301.0,209.4 L 302.0,218.7 L 303.0,227.8 L 304.0,236.6 L 305.0,245.0 L 306.0,252.9 L 307.0,260.2 L 308.0,266.9 L 309.0,272.8 L 310.0,277.9 L 311.0,282.2 L 312.0,285.6 L 313.0,288.0 L 314.0,289.5 L 315.0,290.0 L 316.0,289.5 L 317.0,288.0 L 318.0,285.6 L 319.0,282.2 L 320.0,277.9 L 321.0,272.8 L 322.0,266.9 L 323.0,260.2 L 324.0,252.9 L 325.0,245.0 L 326.0,236.6 L 327.0,227.8 L 328.0,218.7 L 329.0,209.4 L 330.0,200.0" fill="none" stroke="#0b6e69" stroke-width="2.4"/>
+<text x="30" y="52" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1f2933">（a）1.00 MHz / 正弦</text>
+<text x="30" y="348" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">f ≈ 1.000 MHz，Vpp ≈ 6.0 V</text>
+<text x="30" y="366" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">时基 0.5 µs/div；垂直 1 V/div</text>
+<text x="180" y="386" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#0b6e69" text-anchor="middle">合格：波形对称、无削顶</text>
+<rect x="430" y="60" width="340" height="270" fill="#fcfbf7" stroke="#c9d1d9" stroke-width="1.2"/>
+<g stroke="#d9e0e3" stroke-width="1">
+<line x1="430" y1="80" x2="430" y2="320"/>
+<line x1="460" y1="80" x2="460" y2="320"/>
+<line x1="490" y1="80" x2="490" y2="320"/>
+<line x1="520" y1="80" x2="520" y2="320"/>
+<line x1="550" y1="80" x2="550" y2="320"/>
+<line x1="580" y1="80" x2="580" y2="320"/>
+<line x1="610" y1="80" x2="610" y2="320"/>
+<line x1="640" y1="80" x2="640" y2="320"/>
+<line x1="670" y1="80" x2="670" y2="320"/>
+<line x1="700" y1="80" x2="700" y2="320"/>
+<line x1="730" y1="80" x2="730" y2="320"/>
+<line x1="430" y1="80" x2="730" y2="80"/>
+<line x1="430" y1="110" x2="730" y2="110"/>
+<line x1="430" y1="140" x2="730" y2="140"/>
+<line x1="430" y1="170" x2="730" y2="170"/>
+<line x1="430" y1="200" x2="730" y2="200"/>
+<line x1="430" y1="230" x2="730" y2="230"/>
+<line x1="430" y1="260" x2="730" y2="260"/>
+<line x1="430" y1="290" x2="730" y2="290"/>
+<line x1="430" y1="320" x2="730" y2="320"/>
+</g>
+<line x1="430" y1="200" x2="730" y2="200" stroke="#aab4bd" stroke-width="1.2"/>
+<path d="M 430.0,200.0 L 431.0,181.3 L 432.0,163.4 L 433.0,147.1 L 434.0,133.1 L 435.0,122.1 L 436.0,114.4 L 437.0,110.5 L 438.0,110.5 L 439.0,114.4 L 440.0,122.1 L 441.0,133.1 L 442.0,147.1 L 443.0,163.4 L 444.0,181.3 L 445.0,200.0 L 446.0,218.7 L 447.0,236.6 L 448.0,252.9 L 449.0,266.9 L 450.0,277.9 L 451.0,285.6 L 452.0,289.5 L 453.0,289.5 L 454.0,285.6 L 455.0,277.9 L 456.0,266.9 L 457.0,252.9 L 458.0,236.6 L 459.0,218.7 L 460.0,200.0 L 461.0,181.3 L 462.0,163.4 L 463.0,147.1 L 464.0,133.1 L 465.0,122.1 L 466.0,114.4 L 467.0,110.5 L 468.0,110.5 L 469.0,114.4 L 470.0,122.1 L 471.0,133.1 L 472.0,147.1 L 473.0,163.4 L 474.0,181.3 L 475.0,200.0 L 476.0,218.7 L 477.0,236.6 L 478.0,252.9 L 479.0,266.9 L 480.0,277.9 L 481.0,285.6 L 482.0,289.5 L 483.0,289.5 L 484.0,285.6 L 485.0,277.9 L 486.0,266.9 L 487.0,252.9 L 488.0,236.6 L 489.0,218.7 L 490.0,200.0 L 491.0,181.3 L 492.0,163.4 L 493.0,147.1 L 494.0,133.1 L 495.0,122.1 L 496.0,114.4 L 497.0,110.5 L 498.0,110.5 L 499.0,114.4 L 500.0,122.1 L 501.0,133.1 L 502.0,147.1 L 503.0,163.4 L 504.0,181.3 L 505.0,200.0 L 506.0,218.7 L 507.0,236.6 L 508.0,252.9 L 509.0,266.9 L 510.0,277.9 L 511.0,285.6 L 512.0,289.5 L 513.0,289.5 L 514.0,285.6 L 515.0,277.9 L 516.0,266.9 L 517.0,252.9 L 518.0,236.6 L 519.0,218.7 L 520.0,200.0 L 521.0,181.3 L 522.0,163.4 L 523.0,147.1 L 524.0,133.1 L 525.0,122.1 L 526.0,114.4 L 527.0,110.5 L 528.0,110.5 L 529.0,114.4 L 530.0,122.1 L 531.0,133.1 L 532.0,147.1 L 533.0,163.4 L 534.0,181.3 L 535.0,200.0 L 536.0,218.7 L 537.0,236.6 L 538.0,252.9 L 539.0,266.9 L 540.0,277.9 L 541.0,285.6 L 542.0,289.5 L 543.0,289.5 L 544.0,285.6 L 545.0,277.9 L 546.0,266.9 L 547.0,252.9 L 548.0,236.6 L 549.0,218.7 L 550.0,200.0 L 551.0,181.3 L 552.0,163.4 L 553.0,147.1 L 554.0,133.1 L 555.0,122.1 L 556.0,114.4 L 557.0,110.5 L 558.0,110.5 L 559.0,114.4 L 560.0,122.1 L 561.0,133.1 L 562.0,147.1 L 563.0,163.4 L 564.0,181.3 L 565.0,200.0 L 566.0,218.7 L 567.0,236.6 L 568.0,252.9 L 569.0,266.9 L 570.0,277.9 L 571.0,285.6 L 572.0,289.5 L 573.0,289.5 L 574.0,285.6 L 575.0,277.9 L 576.0,266.9 L 577.0,252.9 L 578.0,236.6 L 579.0,218.7 L 580.0,200.0 L 581.0,181.3 L 582.0,163.4 L 583.0,147.1 L 584.0,133.1 L 585.0,122.1 L 586.0,114.4 L 587.0,110.5 L 588.0,110.5 L 589.0,114.4 L 590.0,122.1 L 591.0,133.1 L 592.0,147.1 L 593.0,163.4 L 594.0,181.3 L 595.0,200.0 L 596.0,218.7 L 597.0,236.6 L 598.0,252.9 L 599.0,266.9 L 600.0,277.9 L 601.0,285.6 L 602.0,289.5 L 603.0,289.5 L 604.0,285.6 L 605.0,277.9 L 606.0,266.9 L 607.0,252.9 L 608.0,236.6 L 609.0,218.7 L 610.0,200.0 L 611.0,181.3 L 612.0,163.4 L 613.0,147.1 L 614.0,133.1 L 615.0,122.1 L 616.0,114.4 L 617.0,110.5 L 618.0,110.5 L 619.0,114.4 L 620.0,122.1 L 621.0,133.1 L 622.0,147.1 L 623.0,163.4 L 624.0,181.3 L 625.0,200.0 L 626.0,218.7 L 627.0,236.6 L 628.0,252.9 L 629.0,266.9 L 630.0,277.9 L 631.0,285.6 L 632.0,289.5 L 633.0,289.5 L 634.0,285.6 L 635.0,277.9 L 636.0,266.9 L 637.0,252.9 L 638.0,236.6 L 639.0,218.7 L 640.0,200.0 L 641.0,181.3 L 642.0,163.4 L 643.0,147.1 L 644.0,133.1 L 645.0,122.1 L 646.0,114.4 L 647.0,110.5 L 648.0,110.5 L 649.0,114.4 L 650.0,122.1 L 651.0,133.1 L 652.0,147.1 L 653.0,163.4 L 654.0,181.3 L 655.0,200.0 L 656.0,218.7 L 657.0,236.6 L 658.0,252.9 L 659.0,266.9 L 660.0,277.9 L 661.0,285.6 L 662.0,289.5 L 663.0,289.5 L 664.0,285.6 L 665.0,277.9 L 666.0,266.9 L 667.0,252.9 L 668.0,236.6 L 669.0,218.7 L 670.0,200.0 L 671.0,181.3 L 672.0,163.4 L 673.0,147.1 L 674.0,133.1 L 675.0,122.1 L 676.0,114.4 L 677.0,110.5 L 678.0,110.5 L 679.0,114.4 L 680.0,122.1 L 681.0,133.1 L 682.0,147.1 L 683.0,163.4 L 684.0,181.3 L 685.0,200.0 L 686.0,218.7 L 687.0,236.6 L 688.0,252.9 L 689.0,266.9 L 690.0,277.9 L 691.0,285.6 L 692.0,289.5 L 693.0,289.5 L 694.0,285.6 L 695.0,277.9 L 696.0,266.9 L 697.0,252.9 L 698.0,236.6 L 699.0,218.7 L 700.0,200.0 L 701.0,181.3 L 702.0,163.4 L 703.0,147.1 L 704.0,133.1 L 705.0,122.1 L 706.0,114.4 L 707.0,110.5 L 708.0,110.5 L 709.0,114.4 L 710.0,122.1 L 711.0,133.1 L 712.0,147.1 L 713.0,163.4 L 714.0,181.3 L 715.0,200.0 L 716.0,218.7 L 717.0,236.6 L 718.0,252.9 L 719.0,266.9 L 720.0,277.9 L 721.0,285.6 L 722.0,289.5 L 723.0,289.5 L 724.0,285.6 L 725.0,277.9 L 726.0,266.9 L 727.0,252.9 L 728.0,236.6 L 729.0,218.7 L 730.0,200.0" fill="none" stroke="#0b6e69" stroke-width="2.4"/>
+<text x="430" y="52" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1f2933">（b）2.00 MHz / 正弦</text>
+<text x="430" y="348" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">f ≈ 2.000 MHz，Vpp ≈ 5.6 V</text>
+<text x="430" y="366" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">时基 0.25 µs/div；垂直 1 V/div</text>
+<text x="580" y="386" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#0b6e69" text-anchor="middle">合格：周期减半，幅度基本不变</text>
+<rect x="830" y="60" width="340" height="270" fill="#fcfbf7" stroke="#c9d1d9" stroke-width="1.2"/>
+<g stroke="#d9e0e3" stroke-width="1">
+<line x1="830" y1="80" x2="830" y2="320"/>
+<line x1="860" y1="80" x2="860" y2="320"/>
+<line x1="890" y1="80" x2="890" y2="320"/>
+<line x1="920" y1="80" x2="920" y2="320"/>
+<line x1="950" y1="80" x2="950" y2="320"/>
+<line x1="980" y1="80" x2="980" y2="320"/>
+<line x1="1010" y1="80" x2="1010" y2="320"/>
+<line x1="1040" y1="80" x2="1040" y2="320"/>
+<line x1="1070" y1="80" x2="1070" y2="320"/>
+<line x1="1100" y1="80" x2="1100" y2="320"/>
+<line x1="1130" y1="80" x2="1130" y2="320"/>
+<line x1="830" y1="80" x2="1130" y2="80"/>
+<line x1="830" y1="110" x2="1130" y2="110"/>
+<line x1="830" y1="140" x2="1130" y2="140"/>
+<line x1="830" y1="170" x2="1130" y2="170"/>
+<line x1="830" y1="200" x2="1130" y2="200"/>
+<line x1="830" y1="230" x2="1130" y2="230"/>
+<line x1="830" y1="260" x2="1130" y2="260"/>
+<line x1="830" y1="290" x2="1130" y2="290"/>
+<line x1="830" y1="320" x2="1130" y2="320"/>
+</g>
+<line x1="830" y1="200" x2="1130" y2="200" stroke="#aab4bd" stroke-width="1.2"/>
+<path d="M 830.0,200.0 L 831.0,190.6 L 832.0,181.3 L 833.0,172.2 L 834.0,163.4 L 835.0,155.0 L 836.0,147.1 L 837.0,139.8 L 838.0,133.1 L 839.0,128.0 L 840.0,128.0 L 841.0,128.0 L 842.0,128.0 L 843.0,128.0 L 844.0,128.0 L 845.0,128.0 L 846.0,128.0 L 847.0,128.0 L 848.0,128.0 L 849.0,128.0 L 850.0,128.0 L 851.0,128.0 L 852.0,133.1 L 853.0,139.8 L 854.0,147.1 L 855.0,155.0 L 856.0,163.4 L 857.0,172.2 L 858.0,181.3 L 859.0,190.6 L 860.0,200.0 L 861.0,209.4 L 862.0,218.7 L 863.0,227.8 L 864.0,236.6 L 865.0,245.0 L 866.0,252.9 L 867.0,260.2 L 868.0,266.9 L 869.0,272.0 L 870.0,272.0 L 871.0,272.0 L 872.0,272.0 L 873.0,272.0 L 874.0,272.0 L 875.0,272.0 L 876.0,272.0 L 877.0,272.0 L 878.0,272.0 L 879.0,272.0 L 880.0,272.0 L 881.0,272.0 L 882.0,266.9 L 883.0,260.2 L 884.0,252.9 L 885.0,245.0 L 886.0,236.6 L 887.0,227.8 L 888.0,218.7 L 889.0,209.4 L 890.0,200.0 L 891.0,190.6 L 892.0,181.3 L 893.0,172.2 L 894.0,163.4 L 895.0,155.0 L 896.0,147.1 L 897.0,139.8 L 898.0,133.1 L 899.0,128.0 L 900.0,128.0 L 901.0,128.0 L 902.0,128.0 L 903.0,128.0 L 904.0,128.0 L 905.0,128.0 L 906.0,128.0 L 907.0,128.0 L 908.0,128.0 L 909.0,128.0 L 910.0,128.0 L 911.0,128.0 L 912.0,133.1 L 913.0,139.8 L 914.0,147.1 L 915.0,155.0 L 916.0,163.4 L 917.0,172.2 L 918.0,181.3 L 919.0,190.6 L 920.0,200.0 L 921.0,209.4 L 922.0,218.7 L 923.0,227.8 L 924.0,236.6 L 925.0,245.0 L 926.0,252.9 L 927.0,260.2 L 928.0,266.9 L 929.0,272.0 L 930.0,272.0 L 931.0,272.0 L 932.0,272.0 L 933.0,272.0 L 934.0,272.0 L 935.0,272.0 L 936.0,272.0 L 937.0,272.0 L 938.0,272.0 L 939.0,272.0 L 940.0,272.0 L 941.0,272.0 L 942.0,266.9 L 943.0,260.2 L 944.0,252.9 L 945.0,245.0 L 946.0,236.6 L 947.0,227.8 L 948.0,218.7 L 949.0,209.4 L 950.0,200.0 L 951.0,190.6 L 952.0,181.3 L 953.0,172.2 L 954.0,163.4 L 955.0,155.0 L 956.0,147.1 L 957.0,139.8 L 958.0,133.1 L 959.0,128.0 L 960.0,128.0 L 961.0,128.0 L 962.0,128.0 L 963.0,128.0 L 964.0,128.0 L 965.0,128.0 L 966.0,128.0 L 967.0,128.0 L 968.0,128.0 L 969.0,128.0 L 970.0,128.0 L 971.0,128.0 L 972.0,133.1 L 973.0,139.8 L 974.0,147.1 L 975.0,155.0 L 976.0,163.4 L 977.0,172.2 L 978.0,181.3 L 979.0,190.6 L 980.0,200.0 L 981.0,209.4 L 982.0,218.7 L 983.0,227.8 L 984.0,236.6 L 985.0,245.0 L 986.0,252.9 L 987.0,260.2 L 988.0,266.9 L 989.0,272.0 L 990.0,272.0 L 991.0,272.0 L 992.0,272.0 L 993.0,272.0 L 994.0,272.0 L 995.0,272.0 L 996.0,272.0 L 997.0,272.0 L 998.0,272.0 L 999.0,272.0 L 1000.0,272.0 L 1001.0,272.0 L 1002.0,266.9 L 1003.0,260.2 L 1004.0,252.9 L 1005.0,245.0 L 1006.0,236.6 L 1007.0,227.8 L 1008.0,218.7 L 1009.0,209.4 L 1010.0,200.0 L 1011.0,190.6 L 1012.0,181.3 L 1013.0,172.2 L 1014.0,163.4 L 1015.0,155.0 L 1016.0,147.1 L 1017.0,139.8 L 1018.0,133.1 L 1019.0,128.0 L 1020.0,128.0 L 1021.0,128.0 L 1022.0,128.0 L 1023.0,128.0 L 1024.0,128.0 L 1025.0,128.0 L 1026.0,128.0 L 1027.0,128.0 L 1028.0,128.0 L 1029.0,128.0 L 1030.0,128.0 L 1031.0,128.0 L 1032.0,133.1 L 1033.0,139.8 L 1034.0,147.1 L 1035.0,155.0 L 1036.0,163.4 L 1037.0,172.2 L 1038.0,181.3 L 1039.0,190.6 L 1040.0,200.0 L 1041.0,209.4 L 1042.0,218.7 L 1043.0,227.8 L 1044.0,236.6 L 1045.0,245.0 L 1046.0,252.9 L 1047.0,260.2 L 1048.0,266.9 L 1049.0,272.0 L 1050.0,272.0 L 1051.0,272.0 L 1052.0,272.0 L 1053.0,272.0 L 1054.0,272.0 L 1055.0,272.0 L 1056.0,272.0 L 1057.0,272.0 L 1058.0,272.0 L 1059.0,272.0 L 1060.0,272.0 L 1061.0,272.0 L 1062.0,266.9 L 1063.0,260.2 L 1064.0,252.9 L 1065.0,245.0 L 1066.0,236.6 L 1067.0,227.8 L 1068.0,218.7 L 1069.0,209.4 L 1070.0,200.0 L 1071.0,190.6 L 1072.0,181.3 L 1073.0,172.2 L 1074.0,163.4 L 1075.0,155.0 L 1076.0,147.1 L 1077.0,139.8 L 1078.0,133.1 L 1079.0,128.0 L 1080.0,128.0 L 1081.0,128.0 L 1082.0,128.0 L 1083.0,128.0 L 1084.0,128.0 L 1085.0,128.0 L 1086.0,128.0 L 1087.0,128.0 L 1088.0,128.0 L 1089.0,128.0 L 1090.0,128.0 L 1091.0,128.0 L 1092.0,133.1 L 1093.0,139.8 L 1094.0,147.1 L 1095.0,155.0 L 1096.0,163.4 L 1097.0,172.2 L 1098.0,181.3 L 1099.0,190.6 L 1100.0,200.0 L 1101.0,209.4 L 1102.0,218.7 L 1103.0,227.8 L 1104.0,236.6 L 1105.0,245.0 L 1106.0,252.9 L 1107.0,260.2 L 1108.0,266.9 L 1109.0,272.0 L 1110.0,272.0 L 1111.0,272.0 L 1112.0,272.0 L 1113.0,272.0 L 1114.0,272.0 L 1115.0,272.0 L 1116.0,272.0 L 1117.0,272.0 L 1118.0,272.0 L 1119.0,272.0 L 1120.0,272.0 L 1121.0,272.0 L 1122.0,266.9 L 1123.0,260.2 L 1124.0,252.9 L 1125.0,245.0 L 1126.0,236.6 L 1127.0,227.8 L 1128.0,218.7 L 1129.0,209.4 L 1130.0,200.0" fill="none" stroke="#b45309" stroke-width="2.4"/>
+<text x="830" y="52" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1f2933">（c）削顶失真（不合格）</text>
+<text x="830" y="348" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">幅度过大 / 缓冲级过驱动</text>
+<text x="830" y="366" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">时基 0.5 µs/div；垂直 1 V/div</text>
+<text x="980" y="386" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#b45309" text-anchor="middle">减小 C6 或增大 R7，重调静态工作点</text>
+<text x="30" y="462" font-family="Noto Sans CJK SC, Arial, sans-serif" font-size="12" fill="#6b7785">注：波形为示意，实际幅度以 1 kΩ 负载、示波器 10:1 探头实测为准；测量前先确认探头补偿。</text>
+</svg>
+    <figcaption><b>图 6-1</b>　示波器波形示意：(a) 1.00 MHz 合格波形；(b) 2.00 MHz 合格波形，周期减半、幅度基本不变；(c) 驱动过强导致的削顶失真。实际幅度以 1 kΩ 负载、10:1 探头实测为准。</figcaption>
+  </figure>
+  <ul>
+    <li><strong>合格：</strong>上下半周对称，峰顶圆滑，无平顶；频率读数稳定，抖动小于 1 kHz。</li>
+    <li><strong>削顶：</strong>峰顶或谷底出现平段，说明 Q1 或 Q2 进入饱和/截止。先减小 C6 或增大 R7，再考虑增大 R5。</li>
+    <li><strong>不对称：</strong>正负半周幅度差超过 10%，多为偏置偏离或负载回流路径不对；复查 Q1/Q2 静态电压与地线。</li>
+    <li><strong>寄生振荡：</strong>正弦上叠加高频毛刺，或频率突然跳到另一值；查 L2 自谐振、电源去耦、探头地线。</li>
+  </ul>
+
+  <h3>6.7 故障排查表</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>现象</th><th>可能原因</th><th>检查与处理</th></tr></thead>
+      <tbody>
+        <tr><td>上电无电流、LED 不亮</td><td>电源未接、D1 反接、J1 虚焊、LED 极性反</td><td>断电测 J1 电阻；查 D1 色环方向；补焊</td></tr>
+        <tr><td>电流直接到限流值</td><td>电源短路、电解反接、Q1/Q2 引脚接反</td><td>立即断电；摸发热元件；查 C9/C7 极性与三极管引脚</td></tr>
+        <tr><td>TP1 只有直流、无振荡</td><td>L1 开路、C1/C2/C3 虚焊、Q1 损坏、Re 过大</td><td>测 L1 电阻；补焊回路电容；把 Re 换 470 Ω 试</td></tr>
+        <tr><td>频率偏高</td><td>C4/C5 偏小、C3 偏小、杂散小</td><td>并联 10–22 pF NP0 电容；增大 C5</td></tr>
+        <tr><td>频率偏低</td><td>L1 偏大、C3 偏大、杂散大、引线长</td><td>实测 L1；缩短回路引线；把 C3 换 33 pF</td></tr>
+        <tr><td>调不到 2 MHz</td><td>C4 最小容量偏大、杂散过大、C5 失效</td><td>换 C5；缩短引线；确认 C4 能旋到最小</td></tr>
+        <tr><td>输出 Vpp 不足 4 V</td><td>C6 太小、R7 太大、R5 太大、Q1 电流小</td><td>按 C6→R7→R5→Re 顺序调；确认负载为 1 kΩ</td></tr>
+        <tr><td>波形削顶</td><td>C6/R7 驱动过强、R5 太小、负载过轻</td><td>减小 C6 或增大 R7；增大 R5；接 1 kΩ 负载再测</td></tr>
+        <tr><td>频率漂移</td><td>C4 薄膜温漂、手靠近、电源不稳</td><td>固定 C4；用绝缘棒；换稳压电源；预热 5 min</td></tr>
+        <tr><td>缓冲无输出</td><td>C6/C7 虚焊、Q2 损坏、R3/R4 错</td><td>测 Q2 三个电极电压；补焊 C6/C7</td></tr>
+        <tr><td>接 1 kΩ 掉幅明显</td><td>R5 过大、C7 容量小、Q2 电流小</td><td>R5 换 560 Ω；C7 保持 10 µF；复查 Q2 偏置</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.8 性能检测项目</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>项目</th><th>方法</th><th>判据</th></tr></thead>
+      <tbody>
+        <tr><td>频率范围</td><td>C4 旋到两端，读 TP3 频率</td><td>最低 ≤ 1.00 MHz，最高 ≥ 2.00 MHz</td></tr>
+        <tr><td>频率刻度</td><td>五个频点逐一测量</td><td>误差 ≤ ±1%，重复性 ≤ ±5 kHz</td></tr>
+        <tr><td>输出幅度</td><td>1 kΩ 负载，五个频点测 Vpp</td><td>全部 &gt; 4 V，且无明显削顶</td></tr>
+        <tr><td>波形失真</td><td>示波器观察正弦对称性</td><td>无平顶，正负半周差 &lt; 10%</td></tr>
+        <tr><td>负载能力</td><td>分别接 1 kΩ、10 kΩ、开路</td><td>1 kΩ 时 Vpp 下降 &lt; 20%，频率漂移 &lt; 0.1%</td></tr>
+        <tr><td>电源适应</td><td>11.4–12.6 V 变化</td><td>频率漂移 &lt; 0.1%，波形正常</td></tr>
+        <tr><td>短期稳定度</td><td>预热 5 min，每 1 min 记一次频率</td><td>5 min 内漂移 &lt; 0.1%</td></tr>
+        <tr><td>整机电流</td><td>12 V 下读电源电流</td><td>18–23 mA，无异常发热</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s7">
+  <h2><span class="num">07</span>验收自检与稳定性</h2>
+  <p class="sub">把任务书指标逐条对照，确认数据可复现，再交给老师验收。</p>
+
+  <h3>7.1 指标对照表</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>指标</th><th>任务书要求</th><th>实测（填写）</th><th>判定</th></tr></thead>
+      <tbody>
+        <tr><td>供电</td><td>单电源 12 V</td><td>　</td><td>□ 合格</td></tr>
+        <tr><td>频率下限</td><td>≤ 1.00 MHz</td><td>　</td><td>□ 合格</td></tr>
+        <tr><td>频率上限</td><td>≥ 2.00 MHz</td><td>　</td><td>□ 合格</td></tr>
+        <tr><td>频率可调</td><td>1–2 MHz 连续</td><td>　</td><td>□ 合格</td></tr>
+        <tr><td>输出幅度</td><td>Vpp &gt; 4 V（1 kΩ）</td><td>　</td><td>□ 合格</td></tr>
+        <tr><td>波形</td><td>无明显失真</td><td>　</td><td>□ 合格</td></tr>
+        <tr><td>稳定性</td><td>5 min 漂移 &lt; 0.1%</td><td>　</td><td>□ 合格</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.2 稳定性检查</h3>
+  <ul>
+    <li><strong>预热。</strong>通电 5 min 后再测频率。刚上电时 Q1 结温上升，频率会向一个方向漂移，属正常现象。</li>
+    <li><strong>电源。</strong>把 12 V 调到 11.4 V 和 12.6 V，各测一次频率。若漂移超过 0.1%，检查 Cb、C8 与电源质量。</li>
+    <li><strong>负载。</strong>在 1 kΩ、10 kΩ、开路三种条件下测频率与 Vpp。若开路时频率明显偏移，说明缓冲级隔离不足，检查 C6 是否偏大、Q2 是否工作。</li>
+    <li><strong>手靠近。</strong>手掌距回路 5 cm，频率应几乎不变；若变化超过 10 kHz，说明回路 Q 值低或屏蔽不足，可在 L1 外加一层接地铜箔。</li>
+    <li><strong>机械。</strong>轻敲板子与转动 C4，波形不应跳变。若有跳变，查虚焊与 C4 接触不良。</li>
+  </ul>
+
+  <h3>7.3 不达标速查</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>问题</th><th>首选动作</th><th>备选动作</th></tr></thead>
+      <tbody>
+        <tr><td>低端到不了 1 MHz</td><td>C4 两端并联 10–22 pF NP0</td><td>换 120 µH L1（需重新标定）</td></tr>
+        <tr><td>高端到不了 2 MHz</td><td>C3 换 33 pF，缩短回路引线</td><td>C5 换 5–20 pF</td></tr>
+        <tr><td>幅度不足</td><td>C6 换 220 pF</td><td>R7 换 820 Ω；R5 换 560 Ω</td></tr>
+        <tr><td>削顶</td><td>C6 换 100 pF</td><td>R7 换 1.2 kΩ；R5 换 820 Ω</td></tr>
+        <tr><td>停振</td><td>Re 换 470 Ω</td><td>C1 换 270 pF；检查 L1/C3 焊接</td></tr>
+        <tr><td>频率漂移</td><td>固定 C4，预热 5 min</td><td>换 NP0 电容；加稳压电源</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s8">
+  <h2><span class="num">08</span>课程设计报告提纲</h2>
+  <p class="sub">按任务书要求的九项组织，每项都给出必须写的内容与建议图表。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>章节</th><th>必须写的内容</th><th>建议图表</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1 题目</strong></td><td>高频 LC 振荡电路的设计与制作；组别、成员、日期</td><td>—</td></tr>
+        <tr><td><strong>2 任务要求</strong></td><td>抄录任务书指标：12 V 单电源、1–2 MHz、Vpp &gt; 4 V、无明显失真；说明验收方式</td><td>指标表</td></tr>
+        <tr><td><strong>3 设计方案及功能说明</strong></td><td>三种电容三点式比较；选择西勒的理由；整机框图；各模块功能</td><td>拓扑对比表、图 2-1 框图</td></tr>
+        <tr><td><strong>4 电路设计与分析</strong></td><td>Q1 直流工作点、反馈系数、频率公式与电容表、RFC 阻尼、Q2 缓冲与 C6/R7 分压；给出全部参数</td><td>工作点表、频率表、图 2-2 原理图</td></tr>
+        <tr><td><strong>5 整机电路图与测试波形</strong></td><td>整机原理图、洞洞板布局图、五个频点的实测波形截图；标注测试点</td><td>原理图、布局图、波形图</td></tr>
+        <tr><td><strong>6 焊接调试及性能检测</strong></td><td>焊接顺序、上电流程、静态电压、频率校准、幅度调整、故障与处理、性能数据表、误差分析</td><td>记录表、故障表、指标对照表</td></tr>
+        <tr><td><strong>7 元器件清单</strong></td><td>位号、规格、数量、备注；关键器件选型理由；替代方案</td><td>BOM 表</td></tr>
+        <tr><td><strong>8 总结</strong></td><td>完成情况、遇到的问题与解决办法、仍存在的不足、改进方向</td><td>—</td></tr>
+        <tr><td><strong>9 参考文献</strong></td><td>教材、数据手册、公开资料；格式统一</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>8.1 写作与数据规范</h3>
+  <ul>
+    <li><strong>单位与有效数字。</strong>频率写到 kHz（如 1.002 MHz），电压写到 0.1 V，电流写到 0.1 mA；不要出现“约 4V 左右”这类模糊表述。</li>
+    <li><strong>原始数据。</strong>测试记录表保留三次测量值，报告里给平均值；波形截图要带时基、垂直档位和探头衰减比。</li>
+    <li><strong>图表编号。</strong>图、表按章节编号并在正文引用，例如“见图 2-2”“见表 6-1”。</li>
+    <li><strong>误差分析。</strong>至少讨论三项：L1/C4 的标称误差、杂散电容估算偏差、示波器与探头精度。说明为什么实测频率与计算值有差别。</li>
+    <li><strong>个人总结。</strong>每位成员单独写一页：分工、负责的具体工作、遇到的问题、收获与建议。不要复制同一份。</li>
+  </ul>
+
+  <div class="callout">
+    <span class="t">报告里最容易被扣分的点</span>
+    <p>只给结果不给过程；波形截图没有档位信息；频率表按等分刻度编造；BOM 与实际装配不一致；个人总结与小组总结雷同。按本教程的记录表如实填写，这些问题都可以避免。</p>
+  </div>
+</section>
+
+<section id="s9">
+  <h2><span class="num">09</span>参考资料</h2>
+  <p class="sub">教材、器件手册与公开资料。写作时请按学校要求的格式统一编号。</p>
+  <ul>
+    <li>课程设计任务书（本组上传文档），通信专业课程设计，2024 级。<sup><a href="#cite-1">[1]</a></sup></li>
+    <li>张肃文，《高频电子线路》（第五版），高等教育出版社。第 4 章正弦波振荡器。<sup><a href="#cite-2">[2]</a></sup></li>
+    <li>2SC9018 NPN 高频三极管数据手册（UTC 等厂商），TO-92 封装，注意引脚顺序。<sup><a href="#cite-3">[3]</a></sup></li>
+    <li>Wikipedia：Colpitts oscillator、Clapp oscillator，用于拓扑对比的公开资料。<sup><a href="#cite-4">[4]</a></sup><sup><a href="#cite-5">[5]</a></sup></li>
+  </ul>
+</section>
+
+<footer>
+  <div class="sources">
+    <h2>Sources</h2>
+    <ol>
+      <li id="cite-1">
+        <span class="src-title">通信专业课程设计任务书（2024 级），第一周选题：高频 LC 振荡电路设计制作。用户上传文档。</span>
+        <span class="src-url">User-uploaded document</span>
+      </li>
+      <li id="cite-2">
+        <span class="src-title">张肃文，《高频电子线路》（第五版），高等教育出版社。正弦波振荡器与电容三点式电路分析。</span>
+        <span class="src-url">教材，无公开链接</span>
+      </li>
+      <li id="cite-3">
+        <span class="src-title">2SC9018 NPN 高频三极管数据手册（UTC 等厂商），TO-92 封装，f<sub>T</sub> 与引脚定义。</span>
+        <span class="src-url">器件数据手册，无公开链接</span>
+      </li>
+      <li id="cite-4">
+        <span class="src-title">Wikipedia, “Colpitts oscillator”. 电容分压正反馈振荡器的公开条目。</span>
+        <a class="src-url" href="https://en.wikipedia.org/wiki/Colpitts_oscillator" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Colpitts_oscillator</a>
+      </li>
+      <li id="cite-5">
+        <span class="src-title">Wikipedia, “Clapp oscillator”. 串联电容改进型振荡器的公开条目。</span>
+        <a class="src-url" href="https://en.wikipedia.org/wiki/Clapp_oscillator" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Clapp_oscillator</a>
+      </li>
+    </ol>
+  </div>
+  <div class="colophon">
+    本教程为课程设计参考材料，所有参数按 2SC9018、100 µH、1–2 MHz 的条件给出。实际制作请以实测为准，并根据实验室器件误差微调。原理图与布局图为示意，焊接前请再次核对封装与引脚。
+  </div>
+</footer>
+
+</main>
+</div>
+</body>
+</html>
